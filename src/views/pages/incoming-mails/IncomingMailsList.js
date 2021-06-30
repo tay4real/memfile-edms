@@ -13,7 +13,7 @@ import DeleteModal from "../../components/DeleteModal";
 
 const IncomingMailsList = () => {
   const dispatch = useDispatch();
-  let { mails, loading } = useSelector((state) => state.operations);
+  let { mails } = useSelector((state) => state.operations);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [del, setDel] = useState({
@@ -121,7 +121,12 @@ const IncomingMailsList = () => {
                                   {mail.upload_url &&
                                     mail.upload_url.map((url, idx) => {
                                       return (
-                                        <img key={idx} src={url} width="30" />
+                                        <img
+                                          key={idx}
+                                          src={url}
+                                          width="30"
+                                          alt="preview"
+                                        />
                                       );
                                     })}
                                 </div>

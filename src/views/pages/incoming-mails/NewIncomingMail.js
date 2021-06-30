@@ -4,7 +4,6 @@ import { useDropzone } from "react-dropzone";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import {
-  downloadBase64File,
   base64StringtoFile,
   image64toCanvasRef,
   extractImageFileExtensionFromBase64,
@@ -21,7 +20,6 @@ import {
   addNewMail,
   uploadMailScan,
   fetchIncomingMailByID,
-  fetchIncomingMails,
 } from "../../../services/incoming-mails.service";
 
 const baseStyle = {
@@ -87,14 +85,6 @@ const NewIncomingMail = () => {
     setHasPhoto(true);
   };
 
-  const closePhoto = () => {
-    let photo = photoRef.current;
-    let ctx = photo.getContext("2d");
-
-    ctx.clearRect(0, 0, photo.width, photo.height);
-    setHasPhoto(false);
-  };
-
   const savePhoto = () => {
     let photo = photoRef.current;
     // let ctx = photo.getContext("2d");
@@ -113,7 +103,7 @@ const NewIncomingMail = () => {
   let { message, err_message } = useSelector((state) => state.messages);
   let { mdas, mail } = useSelector((state) => state.operations);
 
-  const [error, setError] = useState("");
+  // const [error, setError] = useState("");
 
   const [incomingMail, setIncomingMail] = useState({
     ref_no: "",
@@ -287,9 +277,6 @@ const NewIncomingMail = () => {
       dispatcher: "",
       date_received: "",
     });
-    if (message) {
-      setSuccessMsgs("Incoming mail added successfully");
-    }
   };
 
   useEffect(() => {
@@ -299,6 +286,7 @@ const NewIncomingMail = () => {
   useEffect(() => {
     if (message) {
       dispatch(fetchIncomingMailByID(message));
+      setSuccessMsgs("Incoming mail added successfully");
     }
   }, [dispatch, message]);
 
@@ -323,7 +311,7 @@ const NewIncomingMail = () => {
           className="pt-2 col-sm-9 col-md-9 text-center
             "
         >
-          {error && <Alert variant="warning">{error}</Alert>}
+          {/* {error && <Alert variant="warning">{error}</Alert>} */}
           {err_message && <Alert variant="warning">{err_message}</Alert>}
           {successMsgs && <Alert variant="success">{successMsgs}</Alert>}
         </div>

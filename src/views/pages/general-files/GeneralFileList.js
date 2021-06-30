@@ -13,7 +13,7 @@ import DeleteModal from "../../components/DeleteModal";
 
 const GeneralFileList = () => {
   const dispatch = useDispatch();
-  let { general_files, loading } = useSelector((state) => state.operations);
+  let { general_files } = useSelector((state) => state.operations);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [del, setDel] = useState({
     id: "",

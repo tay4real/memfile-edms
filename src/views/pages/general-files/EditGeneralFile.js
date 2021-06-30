@@ -6,18 +6,15 @@ import { Alert } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAllMDAs } from "../../../services/mda.service";
 
-import {
-  fetchGeneralFilesByMDA,
-  updateFile,
-} from "../../../services/generalfiles.service";
+import { updateFile } from "../../../services/generalfiles.service";
 
 const EditGeneralFile = () => {
   const dispatch = useDispatch();
 
   let { message, err_message } = useSelector((state) => state.messages);
-  let { mdas, general_files, file } = useSelector((state) => state.operations);
+  let { mdas, file } = useSelector((state) => state.operations);
 
-  const [error, setError] = useState("");
+  // const [error, setError] = useState("");
 
   const [editfile, setFile] = useState({
     file_title: "",
@@ -68,7 +65,6 @@ const EditGeneralFile = () => {
               className="pt-2 col-sm-9 col-md-9 m-auto
             "
             >
-              {error && <Alert variant="warning">{error}</Alert>}
               {err_message && <Alert variant="warning">{err_message}</Alert>}
               {message && <Alert variant="success">{message}</Alert>}
             </div>
