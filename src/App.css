@@ -1,38 +1,106 @@
-.App {
-  text-align: center;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: "Fira Sans", sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+a {
+  text-decoration: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+::-webkit-scrollbar {
+  width: 12px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.accordion-body {
+  padding: 0;
+}
+
+.accordion-button:not(.collapsed) {
+  color: #fff;
+  background-color: #007bff;
+  box-shadow: inset 0 -1px 0 rgb(0 0 0 / 13%);
+}
+
+.capture {
+  padding: 20px;
+  border-width: 2;
+  border-radius: 2;
+  border-color: #eeeeee;
+  border-style: dashed;
+  background-color: #fafafa;
+  color: #bdbdbd;
+  outline: none;
+  transition: border 0.24s ease-in-out;
+}
+
+.camera {
+  position: relative;
+}
+
+.result {
+  position: fixed;
+  top: 0;
+  left: 100%;
+  width: 100%;
+  height: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  background-color: rgba(0, 0, 0, 0.9);
+  transition: 0.4s;
 }
 
-.App-link {
-  color: #61dafb;
+.result.hasPhoto {
+  left: 0;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.video {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.button {
+  position: absolute;
+  bottom: 20px;
+
+  left: 20px;
+  appearance: none;
+  border: none;
+  outline: none;
+  padding: 0.3rem 0.7rem;
+  background-image: linear-gradient(to right, #8e65f5 50%, #9b1a94 50%);
+  background-position: 0%;
+  background-size: 200%;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 400;
+  transition: 0.4s;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.button:hover {
+  background-position: 100%;
+}
+
+.frame {
+  width: 210;
+  height: 297;
+  border: 1px solid grey;
 }
