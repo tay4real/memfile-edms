@@ -133,9 +133,10 @@ const IncomingMailsList = () => {
                               </td>
                               <td className="whitespace-nowrap">
                                 <div className="text-sm text-gray-500">
-                                  {new Date(mail.date_received)
-                                    .toISOString()
-                                    .substring(0, 10)}
+                                  {mail.date_received &&
+                                    new Date(mail.date_received)
+                                      .toISOString()
+                                      .substring(0, 10)}
                                 </div>
                               </td>
                               <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">

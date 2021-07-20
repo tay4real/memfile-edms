@@ -83,13 +83,30 @@ export function updateFile(fileId, data) {
   };
 }
 
-export function addMailToFile(fileId, mailId) {
+export function addIncomingMailToFile(fileId, mailId) {
   return async (dispatch) => {
     try {
       dispatch(clearErrMessage());
       dispatch(clearMessage());
       const res = await fetchBackend.put(
-        `/general-files/${fileId}/fileup/${mailId}`
+        `/general-files/${fileId}/fileup-incoming/${mailId}`
+      );
+      if (res.data) {
+        dispatch(setMessage(res.data));
+      }
+    } catch (error) {
+      dispatch(setErrMessage(error.response.data));
+    }
+  };
+}
+
+export function addOutgoingMailToFile(fileId, mailId) {
+  return async (dispatch) => {
+    try {
+      dispatch(clearErrMessage());
+      dispatch(clearMessage());
+      const res = await fetchBackend.put(
+        `/general-files/${fileId}/fileup-outgoing/${mailId}`
       );
       if (res.data) {
         dispatch(setMessage(res.data));

@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
 import { useDropzone } from "react-dropzone";
-import ReactCrop from "react-image-crop";
+
 import "react-image-crop/dist/ReactCrop.css";
 import {
   base64StringtoFile,
-  image64toCanvasRef,
   extractImageFileExtensionFromBase64,
 } from "../../../utils/utils";
 
@@ -18,9 +17,17 @@ import { fetchAllMDAs } from "../../../services/mda.service";
 
 import {
   uploadMailScan,
-  fetchIncomingMailByID,
   editMail,
 } from "../../../services/incoming-mails.service";
+
+import { clearMessage, clearErrMessage } from "../../../actions/message";
+
+import {
+  fetchGeneralFiles,
+  // addIncomingMailToFile,
+} from "../../../services/generalfiles.service";
+
+import { getMailFail } from "../../../actions/operations";
 
 const baseStyle = {
   flex: 1,
@@ -51,59 +58,10 @@ const rejectStyle = {
 };
 
 const EditIncomingMail = () => {
-  const videoRef = useRef(null);
-  const photoRef = useRef(null);
-
-  const [hasPhoto, setHasPhoto] = useState(false);
-
-  const getVideo = () => {
-    navigator.mediaDevices
-      .getUserMedia({ video: { width: 210, height: 297 } })
-      .then((stream) => {
-        let video = videoRef.current;
-        video.srcObject = stream;
-        video.play();
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
-  const takePhoto = () => {
-    const width = 210;
-    const height = 297;
-
-    let video = videoRef.current;
-    let photo = photoRef.current;
-
-    photo.width = width;
-    photo.height = height;
-
-    let ctx = photo.getContext("2d");
-    ctx.drawImage(video, 0, 0, width, height);
-
-    setHasPhoto(true);
-  };
-
-  const savePhoto = () => {
-    let photo = photoRef.current;
-    // let ctx = photo.getContext("2d");
-
-    let image = photo.toDataURL("image/png");
-
-    setUploadUrl(image);
-  };
-
-  useEffect(() => {
-    getVideo();
-  }, [videoRef]);
-
   const dispatch = useDispatch();
 
   let { message, err_message } = useSelector((state) => state.messages);
-  let { mdas, mail } = useSelector((state) => state.operations);
-
-  // const [error, setError] = useState("");
+  let { mdas, mail, general_files } = useSelector((state) => state.operations);
 
   const [incomingMail, setIncomingMail] = useState({
     ref_no: "",
@@ -114,44 +72,34 @@ const EditIncomingMail = () => {
     date_received: "",
   });
 
-  const [updMail, setUpdateMail] = useState({
+  const [file_no, setFileNo] = useState("");
+
+  const [updateMail, setUpdateMail] = useState({
     id: "",
     ref_no: "",
     subject: "",
   });
 
   const [showOthers, setShowOthers] = useState(false);
+  const [showOthersRecipient, setShowOthersRecipient] = useState(false);
 
   const [upload_url, setUploadUrl] = useState("");
 
   const [imgSrcExt, setImgSrcExt] = useState(null);
-  const [errorMsgs, setErrorMsgs] = useState([]);
+  // const [errorMsgs, setErrorMsgs] = useState([]);
   const [successMsgs, setSuccessMsgs] = useState(null);
-  const [crop, setCrop] = useState({
-    aspect: 1 / 1.414,
-  });
-  const [fileName, setFileName] = useState(null);
-  const [imageData64, setImageData64] = useState(null);
-  const [imageCropped, setImageCropped] = useState(false);
 
-  console.log(upload_url);
-  //imgSrc is set onDrop, then set img extension
+  const [fileName, setFileName] = useState(null);
+
+  useEffect(() => {
+    dispatch(fetchGeneralFiles());
+  }, [dispatch]);
+
+  //set img extension
   useEffect(() => {
     if (upload_url)
       setImgSrcExt(extractImageFileExtensionFromBase64(upload_url));
   }, [upload_url]);
-
-  //imageCropped is set to true on handle crop. then set imageData64
-  useEffect(() => {
-    if (imageCropped) {
-      setImageData64(
-        imagePreviewCanvasRef.current.toDataURL("image/" + imgSrcExt)
-      );
-      setFileName("previewFile." + imgSrcExt);
-    }
-  }, [imageCropped, imgSrcExt]);
-
-  const imagePreviewCanvasRef = useRef();
 
   const {
     getRootProps,
@@ -170,7 +118,7 @@ const EditIncomingMail = () => {
     onDrop: (acceptedFiles, rejectedFiles) => {
       const file = acceptedFiles[0]; //we are only excepting one file at a time (multiple: false) so we can set it to the first item in the array
       if (file) {
-        setErrorMsgs([]);
+        // setErrorMsgs([]);
         const reader = new FileReader();
         reader.addEventListener(
           "load",
@@ -181,12 +129,12 @@ const EditIncomingMail = () => {
         );
         reader.readAsDataURL(file);
       } else {
-        const errorsArray = rejectedFiles[0].errors.map(
-          (e) => `${e.code}: ${e.message}`
-        );
+        // const errorsArray = rejectedFiles[0].errors.map(
+        //   (e) => `${e.code}: ${e.message}`
+        // );
         setUploadUrl(null);
         setImgSrcExt(null);
-        setErrorMsgs(errorsArray);
+        // setErrorMsgs(errorsArray);
       }
     },
     multiple: false,
@@ -194,7 +142,7 @@ const EditIncomingMail = () => {
     minSize: 3000,
   });
 
-  const handleImageLoaded = (image) => {};
+  // const handleImageLoaded = (image) => {};
 
   const style = useMemo(
     () => ({
@@ -206,42 +154,23 @@ const EditIncomingMail = () => {
     [isDragActive, isDragReject, isDragAccept]
   );
 
-  const getImageDimensions = async (imgSrc) => {
-    var img = new Image();
-    const dimensions = await new Promise((resolve) => {
-      img.onload = function () {
-        resolve({ width: this.width, height: this.height });
-      };
-      img.src = imgSrc;
-    });
-    return dimensions;
-  };
-
-  const handleCropComplete = async (crop, pixelCrop) => {
-    if (crop.x === 0) return;
-    const canvasRef = imagePreviewCanvasRef.current;
-    const dimensions = await getImageDimensions(upload_url);
-    const canvasCrop = {
-      height: (dimensions.height * pixelCrop.height) / 100,
-      width: (dimensions.width * pixelCrop.width) / 100,
-      y: (dimensions.height * pixelCrop.y) / 100,
-      x: (dimensions.width * pixelCrop.x) / 100,
-    };
-    await image64toCanvasRef(canvasRef, upload_url, canvasCrop, () => {
-      setImageCropped(true);
-    });
-  };
-
-  const upload = (imageData64, fileName) => {
-    console.log(imageData64);
-    const myNewCroppedFile = base64StringtoFile(imageData64, fileName);
+  const upload = (upload_url, fileName) => {
+    const uploadFile = base64StringtoFile(upload_url, fileName);
     var fd = new FormData();
-    fd.append("mail", myNewCroppedFile);
-    dispatch(uploadMailScan(updMail.id, fd));
+    fd.append("mail", uploadFile);
+    dispatch(uploadMailScan(updateMail.id, fd));
+    dispatch(getMailFail());
+    setUpdateMail({
+      id: "",
+      ref_no: "",
+      subject: "",
+    });
   };
 
   const handleUpload = () => {
-    upload(imageData64, fileName);
+    upload(upload_url, fileName);
+    setSuccessMsgs("Upload in progress...");
+    setUploadUrl("");
   };
 
   const onChangeHandler = (e) => {
@@ -255,6 +184,16 @@ const EditIncomingMail = () => {
           [e.target.id]: e.currentTarget.value,
         });
       }
+    } else if (e.target.id === "recipient") {
+      if (e.currentTarget.value === "others") {
+        setShowOthersRecipient(true);
+      } else {
+        setShowOthersRecipient(false);
+        setIncomingMail({
+          ...incomingMail,
+          [e.target.id]: e.currentTarget.value,
+        });
+      }
     } else {
       setIncomingMail({
         ...incomingMail,
@@ -263,22 +202,28 @@ const EditIncomingMail = () => {
     }
   };
 
+  const toggleSetShowOthers = () => {
+    if (showOthers) {
+      setShowOthers(!showOthers);
+    }
+  };
+
+  const toggleSetShowOthersRecipient = () => {
+    if (showOthersRecipient) {
+      setShowOthersRecipient(!showOthersRecipient);
+    }
+  };
+
+  const documentFileHandler = (e) => {
+    if (e.currentTarget.value !== "") {
+      setFileNo(e.currentTarget.value);
+    }
+  };
+
   const updateIncomingMail = async (e) => {
     e.preventDefault();
     if (incomingMail.subject !== "") {
-      dispatch(editMail(updMail.id, incomingMail));
-    }
-
-    setIncomingMail({
-      ref_no: "",
-      subject: "",
-      sender: "",
-      recipient: "",
-      dispatcher: "",
-      date_received: "",
-    });
-    if (message) {
-      setSuccessMsgs("Incoming mail added successfully");
+      dispatch(editMail(updateMail.id, incomingMail));
     }
   };
 
@@ -288,12 +233,14 @@ const EditIncomingMail = () => {
 
   useEffect(() => {
     if (message) {
-      dispatch(fetchIncomingMailByID(message));
+      if (message === "Incoming mail updated successfully") {
+        setSuccessMsgs(message);
+      }
     }
-  }, [dispatch, message]);
+  }, [message]);
 
   useEffect(() => {
-    if (mail) {
+    if (mail && mail._id !== undefined) {
       setUpdateMail({
         id: mail._id,
         ref_no: mail.ref_no,
@@ -309,8 +256,43 @@ const EditIncomingMail = () => {
           .toISOString()
           .substring(0, 10),
       });
+      setFileName(`${mail.ref_no}.` + imgSrcExt);
     }
-  }, [mail]);
+  }, [mail, imgSrcExt]);
+
+  useEffect(() => {
+    if (general_files && mail) {
+      general_files.map((file) => {
+        if (file.incomingmails && file.incomingmails.length !== 0) {
+          file.incomingmails.map((im) => {
+            if (im._id === mail._id) {
+              setFileNo(file._id);
+              return;
+            }
+          });
+        }
+        return;
+      });
+    }
+  }, [general_files, mail]);
+
+  useEffect(() => {
+    if (successMsgs) {
+      setTimeout(() => {
+        setSuccessMsgs(null);
+      }, 5000);
+    }
+    if (message) {
+      setTimeout(() => {
+        dispatch(clearMessage());
+      }, 5000);
+    }
+    if (err_message) {
+      setTimeout(() => {
+        dispatch(clearErrMessage());
+      }, 5000);
+    }
+  }, [dispatch, message, successMsgs, err_message]);
 
   return (
     <div className="content-wrapper">
@@ -318,210 +300,318 @@ const EditIncomingMail = () => {
       <ContentHeader />
 
       {/* Main content */}
-      <div className="row m-0 p-0">
-        <div
-          className="pt-2 col-sm-9 col-md-9 text-center
+
+      <section className="content pb-2">
+        <div className="container-fluid">
+          <div className="card card-default">
+            <div className="card-body">
+              <div className="row">
+                <div
+                  className="col-12 text-center
             "
-        >
-          {err_message && <Alert variant="warning">{err_message}</Alert>}
-          {successMsgs && <Alert variant="success">{successMsgs}</Alert>}
-        </div>
-      </div>
-
-      <div className="row m-0 p-0">
-        <div className="col-sm-9 col-md-6 mx-auto">
-          <div className="card card-primary">
-            <div className="card-header">
-              <h3 className="card-title">Edit Incoming Mail</h3>
-            </div>
-            {/* /.card-header */}
-
-            {/* form start */}
-            <form method="post" onSubmit={updateIncomingMail}>
-              <div className="card-body">
-                <div className="form-group">
-                  <label htmlFor="ref_no">Ref No</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="ref_no"
-                    name="ref_no"
-                    onChange={onChangeHandler}
-                    value={incomingMail.ref_no}
-                    placeholder="Ref No."
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Sender</label>
-                  <select
-                    id="sender"
-                    name="sender"
-                    className="form-control select2"
-                    style={{ width: "100%" }}
-                    value={incomingMail.sender}
-                    onChange={onChangeHandler}
-                  >
-                    <option value="">Choose MDA</option>
-                    <option value="others">Others</option>
-                    {mdas !== null &&
-                      mdas.map((mda) => (
-                        <option key={mda._id} value={mda.name}>
-                          {mda.name}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-
-                <div className={showOthers ? "form-group" : "d-none"}>
-                  <label htmlFor="sender">Sender (Others Specify)</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="sender"
-                    name="sender"
-                    onChange={onChangeHandler}
-                    value={incomingMail.sender}
-                    placeholder="Sender"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="recipient">Recipient</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="recipient"
-                    name="recipient"
-                    onChange={onChangeHandler}
-                    value={incomingMail.recipient}
-                    placeholder="Recipient"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="name">Subject</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="subject"
-                    name="subject"
-                    onChange={onChangeHandler}
-                    value={incomingMail.subject}
-                    placeholder="Subject"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="name">Date Received</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    id="date_received"
-                    name="date_received"
-                    onChange={onChangeHandler}
-                    value={incomingMail.date_received}
-                    placeholder="Date Received"
-                  />
-                </div>
-              </div>
-              {/* /.card-body */}
-              <div className="card-footer">
-                <button type="submit" className="btn btn-primary">
-                  Submit
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div className="col-sm-9 col-md-6 mx-auto">
-          <div className="card card-primary">
-            <div className="card-header">
-              <h3 className="card-title">Capture Incoming Mail</h3>
-            </div>
-            {/* /.card-header */}
-
-            {/* form start */}
-            <form method="post" onSubmit={updateIncomingMail}>
-              <div className="card-body">
-                <div className="form-group">
-                  <label htmlFor="ref_no">Ref No</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    disabled
-                    id="ref_no"
-                    name="ref_no"
-                    onChange={onChangeHandler}
-                    value={updMail.ref_no}
-                    placeholder="Ref No."
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="name">Subject</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="subject"
-                    disabled
-                    name="subject"
-                    onChange={onChangeHandler}
-                    value={updMail.subject}
-                    placeholder="Subject"
-                  />
-                </div>
-              </div>
-              <div {...getRootProps({ style })}>
-                <input {...getInputProps()} />
-                <p>Drag 'n' drop some files here, or click to select files</p>
-              </div>
-              <div className="d-flex justify-content-center w-100 py-2">
-                --OR--
-              </div>
-              <div className="d-flex justify-content-around capture">
-                <div className="camera">
-                  <video ref={videoRef}></video>
-                  <button className="button" onClick={takePhoto}>
-                    Capture
-                  </button>
-                </div>
-                <div className={"camera" + (hasPhoto ? " hasPhoto" : "")}>
-                  <canvas ref={photoRef}></canvas>
-                  <button className="button" onClick={savePhoto}>
-                    Crop Image
-                  </button>
-                </div>
-              </div>
-              <div className="d-flex justify-content-around capture">
-                {" "}
-                <ReactCrop
-                  src={upload_url}
-                  crop={crop}
-                  onChange={(newCrop) => setCrop(newCrop)}
-                  onComplete={handleCropComplete}
-                  onImageLoaded={handleImageLoaded}
-                />
-                <div>
-                  {" "}
-                  <p>Preview Cropped Image</p>
-                  <canvas ref={imagePreviewCanvasRef}></canvas>
-                </div>
-              </div>{" "}
-              {errorMsgs && <p>{errorMsgs}</p>}
-              {/* /.card-body */}
-              <div className="card-footer">
-                <button
-                  type="submit"
-                  onClick={handleUpload}
-                  className="btn btn-primary"
                 >
-                  Upload
+                  {/* {error && <Alert variant="warning">{error}</Alert>} */}/
+                  {err_message && <Alert variant="danger">{err_message}</Alert>}
+                  {successMsgs && (
+                    <Alert variant="success">{successMsgs}</Alert>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="card card-default">
+            <div className="card-header">
+              <h3 className="card-title">New Incoming Mail</h3>
+              <div className="card-tools">
+                <button
+                  type="button"
+                  className="btn btn-tool"
+                  data-card-widget="collapse"
+                >
+                  <i className="fas fa-minus" />
                 </button>
               </div>
-            </form>
+            </div>
+            {/* /.card-header */}
+            <div className="card-body">
+              <div className="row">
+                <div className="col-md-6">
+                  {" "}
+                  <div className="form-group">
+                    <label htmlFor="ref_no">Ref No</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="ref_no"
+                      name="ref_no"
+                      onChange={onChangeHandler}
+                      value={incomingMail.ref_no}
+                      placeholder="Ref No."
+                    />
+                  </div>
+                </div>
+
+                <div className="col-md-6">
+                  {" "}
+                  <div className="form-group">
+                    <label>Document File</label>
+                    <select
+                      id="file_no"
+                      name="file_no"
+                      className="form-control select2"
+                      style={{ width: "100%" }}
+                      value={file_no}
+                      onChange={documentFileHandler}
+                    >
+                      <option value="">Choose File</option>
+
+                      {general_files !== null &&
+                        general_files.map((file) => (
+                          <option key={file._id} value={file._id}>
+                            {file.file_title + " (" + file.mdaShortName + ")"}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-12 col-sm-6">
+                  {" "}
+                  <div className={showOthers ? "d-none" : "form-group"}>
+                    <label>Sender</label>
+                    <select
+                      id="sender"
+                      name="sender"
+                      className="form-control select2"
+                      style={{ width: "100%" }}
+                      value={incomingMail.sender}
+                      onChange={onChangeHandler}
+                    >
+                      <option value="">Choose Sender</option>
+                      <option value="others">Others</option>
+                      {mdas !== null &&
+                        mdas.map((mda) => (
+                          <option key={mda._id} value={mda.name}>
+                            {mda.name}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                  <div className={showOthers ? "form-group" : "d-none"}>
+                    <label htmlFor="sender">
+                      Sender (Others Specify){" "}
+                      <span
+                        className=" badge bg-secondary cursor-pointer"
+                        onClick={toggleSetShowOthers}
+                      >
+                        Choose Sender
+                      </span>
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="sender"
+                      name="sender"
+                      onChange={onChangeHandler}
+                      value={incomingMail.sender}
+                      placeholder="Sender"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-12 col-sm-6">
+                  {" "}
+                  <div
+                    className={showOthersRecipient ? "d-none" : "form-group"}
+                  >
+                    <label>Reciever</label>
+                    <select
+                      id="recipient"
+                      name="recipient"
+                      className="form-control select2"
+                      style={{ width: "100%" }}
+                      value={incomingMail.recipient}
+                      onChange={onChangeHandler}
+                    >
+                      <option value="">Choose Receiver-</option>
+                      <option value="others">Others</option>
+                      {mdas !== null &&
+                        mdas.map((mda) => (
+                          <option key={mda._id} value={mda.name}>
+                            {mda.name}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                  <div
+                    className={showOthersRecipient ? "form-group" : "d-none"}
+                  >
+                    <label htmlFor="recipient">
+                      Receiver (Others Specify){" "}
+                      <span
+                        className=" badge bg-secondary cursor-pointer"
+                        onClick={toggleSetShowOthersRecipient}
+                      >
+                        Choose Receiver
+                      </span>
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="recipient"
+                      name="recipient"
+                      onChange={onChangeHandler}
+                      value={incomingMail.recipient}
+                      placeholder="Reciever"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-12 col-sm-6">
+                  {" "}
+                  <div className="form-group">
+                    <label htmlFor="name">Subject</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="subject"
+                      name="subject"
+                      onChange={onChangeHandler}
+                      value={incomingMail.subject}
+                      placeholder="Subject"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-12 col-sm-6">
+                  {" "}
+                  <div className="form-group">
+                    <label htmlFor="name">Date Received</label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      id="date_received"
+                      name="date_received"
+                      onChange={onChangeHandler}
+                      value={incomingMail.date_received}
+                      placeholder="Date Received"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* /.card-body */}
+            <div className="card-footer">
+              <button
+                type="submit"
+                onClick={updateIncomingMail}
+                className="btn btn-primary"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+          {/* /.card */}
+
+          <div className="card card-default">
+            <div className="card-header">
+              <h3 className="card-title">
+                Mail Document Upload (.png or .jpg format Only)
+              </h3>
+              <div className="card-tools">
+                <button
+                  type="button"
+                  className="btn btn-tool"
+                  data-card-widget="collapse"
+                >
+                  <i className="fas fa-minus" />
+                </button>
+              </div>
+            </div>
+            {/* /.card-header */}
+            <div className="card-body">
+              <div className="row">
+                <div className="col-md-6">
+                  {" "}
+                  <div className="form-group">
+                    <label htmlFor="ref_no">Ref No</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      disabled
+                      id="ref_no"
+                      name="ref_no"
+                      onChange={onChangeHandler}
+                      value={updateMail.ref_no}
+                      placeholder="Ref No."
+                    />
+                  </div>
+                </div>
+
+                <div className="col-md-6">
+                  {" "}
+                  <div className="form-group">
+                    <label htmlFor="name">Document File</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="subject"
+                      disabled
+                      name="subject"
+                      onChange={onChangeHandler}
+                      value={updateMail.subject}
+                      placeholder="Subject"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-12 col-sm-6">
+                  {" "}
+                  <div {...getRootProps({ style })} className="cursor-pointer">
+                    <input {...getInputProps()} />
+                    <p>
+                      Click or Drap a file here to Upload (.jpg or .png format
+                      Only)
+                    </p>
+                  </div>
+                </div>
+
+                <div className="col-12 col-sm-6">
+                  {" "}
+                  <div className="d-flex justify-content-around text-center upload">
+                    {" "}
+                    <div>
+                      {" "}
+                      <p className="text-center">Upload Preview</p>
+                      {upload_url !== "" && (
+                        <img src={upload_url} alt="preview img" width="297" />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* /.card-body */}
+            <div className="card-footer">
+              <button
+                type="submit"
+                onClick={handleUpload}
+                className="btn btn-primary"
+                disabled={upload_url === "" ? true : false}
+              >
+                Upload File
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 };

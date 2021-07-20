@@ -1,69 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import ContentHeader from "../../components/ContentHeader";
+import { fetchUserByID } from "../../../services/user.service";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
-import {
-  fetchGeneralFiles,
-  deleteFile,
-  fetchGeneralFileById,
-} from "../../../services/generalfiles.service";
-
-import DeleteModal from "../../components/DeleteModal";
-
-const GeneralFileList = () => {
+const DeskFiles = () => {
   const dispatch = useDispatch();
-  let { general_files } = useSelector((state) => state.operations);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [del, setDel] = useState({
-    id: "",
-    name: "",
-  });
+  let { user_profile } = useSelector((state) => state.operations);
 
-  const getGeneralFiles = () => {
-    dispatch(fetchGeneralFiles());
-  };
-
-  const getFile = (id) => {
-    dispatch(fetchGeneralFileById(id));
-  };
-  const handleShowDeleteModal = (id, name) => {
-    setShowDeleteModal(true);
-
-    setDel({
-      id: id,
-      name: name,
-    });
-  };
-
-  const handleCloseDeleteModal = () => {
-    setShowDeleteModal(false);
-    setDel({
-      id: "",
-      name: "",
-    });
-  };
-
-  const handleDelete = () => {
-    dispatch(deleteFile(del.id));
-    getGeneralFiles();
-    setDel({
-      id: "",
-      name: "",
-    });
-
-    setShowDeleteModal(false);
-  };
+  let { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    dispatch(fetchGeneralFiles());
-  }, [dispatch]);
+    if (user) {
+      dispatch(fetchUserByID(user._id));
+    }
+  }, [dispatch, user]);
 
   return (
     <div className="content-wrapper">
       {/* Content Header (Page header) */}
       <ContentHeader />
 
+      {/* Main content */}
       <section className="content">
         <div className="container-fluid">
           <div className="row">
@@ -87,9 +45,9 @@ const GeneralFileList = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {general_files !== null ? (
-                        general_files.length !== 0 ? (
-                          general_files.map((file) => (
+                      {user_profile !== null ? (
+                        user_profile.generalfiles.length !== 0 ? (
+                          user_profile.generalfiles.map((file) => (
                             <tr key={file._id}>
                               <td className="">
                                 <div className="d-flex align-items-center">
@@ -120,23 +78,12 @@ const GeneralFileList = () => {
                               </td>
 
                               <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                                <Link
-                                  to={`/general-files/edit`}
-                                  onClick={() => getFile(file._id)}
-                                >
+                                <Link to={`/general-files/edit`}>
                                   <span className="badge bg-primary">Edit</span>
                                 </Link>
                               </td>
                               <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                                <span
-                                  className=" badge bg-danger "
-                                  onClick={() =>
-                                    handleShowDeleteModal(
-                                      file._id,
-                                      file.file_title
-                                    )
-                                  }
-                                >
+                                <span className=" badge bg-danger ">
                                   Delete
                                 </span>
                               </td>
@@ -146,7 +93,7 @@ const GeneralFileList = () => {
                           <tr>
                             <td colSpan="7">
                               <div className="p-1 text-center">
-                                No Files Added
+                                You currently do not have any files at your desk
                               </div>
                             </td>
                           </tr>
@@ -173,16 +120,8 @@ const GeneralFileList = () => {
         </div>
         {/* /.container-fluid */}
       </section>
-
-      <DeleteModal
-        show={showDeleteModal}
-        body={`Are you sure you want to delete file ${del.name}? `}
-        delete={handleDelete}
-        handleClose={handleCloseDeleteModal}
-      />
-      {/* Main content */}
     </div>
   );
 };
 
-export default GeneralFileList;
+export default DeskFiles;

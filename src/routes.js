@@ -16,15 +16,16 @@ const OutgoingMailsList = React.lazy(() =>
 const NewOutgoingMail = React.lazy(() =>
   import("./views/pages/outgoing-mails/NewOutgoingMail")
 );
-const ChargedFiles = React.lazy(() =>
-  import("./views/pages/file-charging/ChargedFiles")
+const EditOutgoingMail = React.lazy(() =>
+  import("./views/pages/outgoing-mails/EditOutgoingMail")
 );
-const ChargeFile = React.lazy(() =>
-  import("./views/pages/file-charging/ChargeFile")
+const DeskFiles = React.lazy(() =>
+  import("./views/pages/file-management/DeskFiles")
 );
-const AddToFile = React.lazy(() =>
-  import("./views/pages/file-charging/AddToFile")
+const FileOperations = React.lazy(() =>
+  import("./views/pages/file-management/FileOperations")
 );
+
 const MDAsList = React.lazy(() => import("./views/pages/mdas/MDAsList"));
 const NewMDA = React.lazy(() => import("./views/pages/mdas/NewMDA"));
 
@@ -49,6 +50,8 @@ const EditGeneralFile = React.lazy(() =>
 );
 const UsersList = React.lazy(() => import("./views/pages/users/UsersList"));
 const NewUser = React.lazy(() => import("./views/pages/users/NewUser"));
+
+// const Search = React.lazy(() => import("./views/pages/search/Search"));
 
 const routes = [
   { path: "/", exact: true, name: "Dashboard", component: Dashboard },
@@ -81,20 +84,25 @@ const routes = [
     component: NewOutgoingMail,
   },
   {
-    path: "/file-charging",
+    path: "/outgoing-mails/edit",
+    name: "Edit Outgoing Mail",
+    component: EditOutgoingMail,
+  },
+  {
+    path: "/files",
     exact: true,
-    name: "Charged Files",
-    component: ChargedFiles,
+    name: "Files",
+    component: DeskFiles,
   },
   {
-    path: "/file-charging/chargefile",
-    name: "Charge File",
-    component: ChargeFile,
+    path: "/files/desk-files",
+    name: "Files at Desk",
+    component: DeskFiles,
   },
   {
-    path: "/file-charging/addtofile",
-    name: "Add To File",
-    component: AddToFile,
+    path: "/files/file-operations",
+    name: "File Operations",
+    component: FileOperations,
   },
   {
     path: "/mdas",

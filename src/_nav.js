@@ -3,7 +3,7 @@ export const navigation = [
     _component: "NavGroup",
     anchor: "Incoming Mails",
     to: "/incoming-mails",
-    //icon_left: "far fa-envelope mr-2",
+
     icon_right: "fas fa-angle-left right",
     items: [
       {
@@ -24,8 +24,7 @@ export const navigation = [
     _component: "NavGroup",
     anchor: "Outgoing Mails",
     to: "/outgoing-mails",
-    //icon_left: "far fa-envelope  mr-2",
-    //icon_right: "fas fa-angle-left right",
+
     items: [
       {
         _component: "NavItem",
@@ -35,7 +34,7 @@ export const navigation = [
       },
       {
         _component: "NavItem",
-        anchor: "Add New Incoming Mail",
+        anchor: "Add New Outgoing Mail",
         to: "/outgoing-mails/add-new",
         icon: "far fa-circle nav-icon ",
       },
@@ -43,27 +42,20 @@ export const navigation = [
   },
   {
     _component: "NavGroup",
-    anchor: "File Charging",
-    to: "/file-charging",
-    // icon_left: "far fa-envelope  mr-2",
-    //  icon_right: "fas fa-angle-left right",
+    anchor: "File Management",
+    to: "/files",
+
     items: [
       {
         _component: "NavItem",
-        anchor: "Charged Files",
-        to: "/file-charging",
+        anchor: "Files at Desk",
+        to: "/files/desk-files",
         icon: "far fa-circle nav-icon ",
       },
       {
         _component: "NavItem",
-        anchor: "Charge File",
-        to: "/file-charging/chargefile",
-        icon: "far fa-circle nav-icon ",
-      },
-      {
-        _component: "NavItem",
-        anchor: "AddToFile",
-        to: "/file-charging/addtofile",
+        anchor: "File Operations",
+        to: "/files/file-operations",
         icon: "far fa-circle nav-icon ",
       },
     ],
@@ -153,7 +145,7 @@ export const admin_nav = [
   // },
   {
     _component: "NavGroup",
-    anchor: "Users",
+    anchor: "User Management",
     to: "/users",
     icon: "fas fa-angle-left right",
     items: [

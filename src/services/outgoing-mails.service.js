@@ -12,12 +12,11 @@ import {
   clearErrMessage,
 } from "../actions/message";
 
-export function fetchIncomingMails() {
+export function fetchAllOutgoingMails() {
   return async (dispatch) => {
     try {
       dispatch(clearErrMessage());
-
-      const res = await fetchBackend.get("/incoming-mails");
+      const res = await fetchBackend.get("/outgoing-mails");
       dispatch(getMailsSucess(res.data));
     } catch (error) {
       dispatch(getMailsFail());
@@ -26,11 +25,11 @@ export function fetchIncomingMails() {
   };
 }
 
-export function searchIncomingMails(query) {
+export function searchOutgoingMails(query) {
   return async (dispatch) => {
     try {
       dispatch(clearErrMessage());
-      const res = await fetchBackend.get(`/incoimng-mails?${query}`);
+      const res = await fetchBackend.get(`/outgoing-mails?${query}`);
       dispatch(getMailsSucess(res.data));
     } catch (error) {
       dispatch(getMailsFail());
@@ -39,11 +38,11 @@ export function searchIncomingMails(query) {
   };
 }
 
-export function fetchIncomingMailByID(mailID) {
+export function fetchOutgoingMailByID(mailID) {
   return async (dispatch) => {
     try {
       dispatch(clearErrMessage());
-      const res = await fetchBackend.get(`/incoming-mails/${mailID}`);
+      const res = await fetchBackend.get(`/outgoing-mails/${mailID}`);
       dispatch(getMail(res.data));
     } catch (error) {
       dispatch(getMailFail());
@@ -56,8 +55,8 @@ export function addNewMail(mail) {
   return async (dispatch) => {
     try {
       dispatch(clearErrMessage());
-
-      const res = await fetchBackend.post("/incoming-mails", mail);
+      dispatch(clearMessage());
+      const res = await fetchBackend.post("/outgoing-mails", mail);
       dispatch(getMail(res.data));
     } catch (error) {
       dispatch(getMailFail());
@@ -72,7 +71,7 @@ export function uploadMailScan(mailID, file_image) {
       dispatch(clearErrMessage());
       dispatch(setMessage(null));
       const res = await fetchBackend.post(
-        `/incoming-mails/${mailID}/upload`,
+        `/outgoing-mails/${mailID}/upload`,
         file_image
       );
       dispatch(setMessage(res.data));
@@ -84,7 +83,7 @@ export function uploadMailScan(mailID, file_image) {
 
 export function downloadPDF(id) {
   window.location.replace(
-    `${process.env.REACT_APP_API_URL}/incoming-mails/${id}/pdf`
+    `${process.env.REACT_APP_API_URL}/outgoing-mails/${id}/pdf`
   );
 }
 
@@ -93,7 +92,7 @@ export function editMail(id, mail) {
     try {
       dispatch(clearMessage());
       dispatch(clearErrMessage());
-      const res = await fetchBackend.put(`/incoming-mails/${id}`, mail);
+      const res = await fetchBackend.put(`/outgoing-mails/${id}`, mail);
       dispatch(setMessage(res.data));
     } catch (error) {
       dispatch(setErrMessage(error.response.data));
@@ -106,7 +105,7 @@ export function changeMailStatus(id) {
     try {
       dispatch(clearMessage());
       dispatch(clearErrMessage());
-      const res = await fetchBackend.put(`/incoming-mails/changestatus/${id}`);
+      const res = await fetchBackend.put(`/outgoing-mails/changestatus/${id}`);
       dispatch(setMessage(res.data));
     } catch (error) {
       dispatch(clearMessage());
@@ -119,7 +118,7 @@ export function deleteMail(id) {
     try {
       dispatch(clearMessage());
       dispatch(clearErrMessage());
-      const res = await fetchBackend.delete(`/incoming-mails/${id}`);
+      const res = await fetchBackend.delete(`/outgoing-mails/${id}`);
       dispatch(setMessage(res.data));
     } catch (error) {
       dispatch(setErrMessage(error.response.data));
@@ -132,7 +131,7 @@ export function deleteAllMails() {
     try {
       dispatch(clearMessage());
       dispatch(clearErrMessage());
-      const res = await fetchBackend.put(`/incoming-mails`);
+      const res = await fetchBackend.put(`/outgoing-mails-mails`);
       dispatch(setMessage(res.data));
     } catch (error) {
       dispatch(setErrMessage(error.response.data));

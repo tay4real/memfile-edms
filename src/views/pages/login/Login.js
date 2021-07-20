@@ -4,6 +4,7 @@ import { Image, Spinner, Alert } from "react-bootstrap";
 import logo from "../../../assets/img/memfileLogo.jpg";
 import { fetchBackend } from "../../../services";
 import useAuth from "../../../hooks/useAuth";
+
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [error, setError] = useState(null);
@@ -53,6 +54,7 @@ const Login = () => {
       }
     }
   };
+
   return (
     <div className="hold-transition login-page">
       <div className="login-box ">
@@ -115,7 +117,14 @@ const Login = () => {
                     type="submit"
                     className="btn btn-primary btn-block"
                   >
-                    {loading ? <Spinner animation="border" /> : "Sign In"}
+                    {loading ? (
+                      <Spinner
+                        animation="border"
+                        className=" spinner-border-sm"
+                      />
+                    ) : (
+                      "Sign In"
+                    )}
                   </button>
                 </div>
                 {/* /.col */}

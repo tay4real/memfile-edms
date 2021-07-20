@@ -1,14 +1,10 @@
 import React from "react";
 // import MessageDropdown from "./header/MessageDropdown";
 import NotificationDropdown from "./header/NotificationDropdown";
-import { AiOutlineLogout } from "react-icons/ai";
-import { logout } from "../services/auth.service";
-import { useDispatch } from "react-redux";
+
 import { NavLink } from "react-router-dom";
 
 const Header = () => {
-  const dispatch = useDispatch();
-
   return (
     <nav className="main-header navbar navbar-expand navbar-white navbar-light">
       {/* Left navbar links */}
@@ -26,7 +22,7 @@ const Header = () => {
           <NavLink
             className="nav-link"
             data-widget="navbar-search"
-            to=""
+            to="/search"
             role="button"
           >
             <i className="fas fa-search" />
@@ -56,6 +52,7 @@ const Header = () => {
             </form>
           </div>
         </li>
+
         {/* Messages Dropdown Menu */}
         {/* <MessageDropdown /> */}
 
@@ -70,16 +67,6 @@ const Header = () => {
             role="button"
           >
             <i className="fas fa-expand-arrows-alt" />
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink
-            className="nav-link text-danger"
-            to="/"
-            onClick={() => dispatch(logout())}
-            role="button"
-          >
-            <AiOutlineLogout />
           </NavLink>
         </li>
       </ul>

@@ -1,8 +1,10 @@
 import React from "react";
 
-import SidebarSearch from "./SidebarSearch";
+import { logout } from "../../services/auth.service";
+import { AiOutlineLogout } from "react-icons/ai";
+
 import UserPanel from "./UserPanel";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 // sidebar nav config
 import { navigation, admin_nav } from "../../_nav";
 
@@ -10,6 +12,7 @@ import NavItem from "./NavItem";
 import NavGroup from "./NavGroup";
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
   let { user } = useSelector((state) => state.auth);
 
   return (
@@ -23,8 +26,21 @@ const Sidebar = () => {
         style={{ maxHeight: "75vh", overflowY: "auto", overflowX: "hidden" }}
       >
         {/* SidebarSearch Form */}
-        <SidebarSearch />
-        {/* Sidebar Menu */}
+
+        <div
+          className="nav nav-pills nav-sidebar flex-column cursor-pointer"
+          onClick={() => dispatch(logout())}
+        >
+          <li className="nav-item bg-danger text-light rounded">
+            <div className="nav-link bg-danger text-dark rounded">
+              <AiOutlineLogout
+                style={{ fontSize: "1.5rem" }}
+                className="mr-2"
+              />
+              <p>Logout</p>
+            </div>
+          </li>
+        </div>
 
         <nav className="mt-2">
           <ul
@@ -51,18 +67,17 @@ const Sidebar = () => {
               .filter((nav) => nav._component === "NavGroup")
               .map((filteredNav, idx) => {
                 return (
-                  <div key={`${idx}`}>
-                    <NavGroup
-                      index={idx}
-                      anchor={filteredNav.anchor}
-                      to={filteredNav.to}
-                      icon_right={filteredNav.icon_right}
-                      icon_left={filteredNav.icon_left}
-                      badge_icon={filteredNav.badge_icon}
-                      badge_text={filteredNav.badge_text}
-                      items={filteredNav.items}
-                    />
-                  </div>
+                  <NavGroup
+                    key={idx}
+                    index={idx}
+                    anchor={filteredNav.anchor}
+                    to={filteredNav.to}
+                    icon_right={filteredNav.icon_right}
+                    icon_left={filteredNav.icon_left}
+                    badge_icon={filteredNav.badge_icon}
+                    badge_text={filteredNav.badge_text}
+                    items={filteredNav.items}
+                  />
                 );
               })}
 
@@ -70,18 +85,17 @@ const Sidebar = () => {
               .filter((nav) => nav._component === "NavGroup")
               .map((filteredNav, idx) => {
                 return (
-                  <div key={`admin${idx}`}>
-                    <NavGroup
-                      index={`admin${idx}`}
-                      anchor={filteredNav.anchor}
-                      to={filteredNav.to}
-                      icon_right={filteredNav.icon_right}
-                      icon_left={filteredNav.icon_left}
-                      badge_icon={filteredNav.badge_icon}
-                      badge_text={filteredNav.badge_text}
-                      items={filteredNav.items}
-                    />
-                  </div>
+                  <NavGroup
+                    key={`admin${idx}`}
+                    index={`admin${idx}`}
+                    anchor={filteredNav.anchor}
+                    to={filteredNav.to}
+                    icon_right={filteredNav.icon_right}
+                    icon_left={filteredNav.icon_left}
+                    badge_icon={filteredNav.badge_icon}
+                    badge_text={filteredNav.badge_text}
+                    items={filteredNav.items}
+                  />
                 );
               })}
           </div>

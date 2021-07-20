@@ -6,11 +6,11 @@ const initialState = {
   mdas: null,
   mda: null,
   users: null,
-  user: null,
+  user_profile: null,
   files: null,
   personal_files: null,
   general_files: null,
-  file: null,
+  general_file: null,
   mails: null,
   mail: null,
   loading: true,
@@ -49,16 +49,16 @@ export default function operations(state = initialState, action) {
       return { ...state, users: null, loading: true };
 
     case c.GET_USER_PROFILE:
-      return { ...state, user: payload, loading: false };
+      return { ...state, user_profile: payload, loading: false };
 
     case c.GET_USER_PROFILE_FAIL:
-      return { ...state, user: null, loading: true };
+      return { ...state, user_profile: null, loading: true };
 
     case c.GET_USER_BY_ID:
-      return { ...state, user: payload, loading: false };
+      return { ...state, user_profile: payload, loading: false };
 
     case c.GET_USER_BY_ID_FAIL:
-      return { ...state, user: null, loading: true };
+      return { ...state, user_profile: null, loading: true };
 
     case c.GET_ALLFILES:
       return { ...state, files: payload };
@@ -79,14 +79,12 @@ export default function operations(state = initialState, action) {
       return { ...state, general_files: null, loading: false };
 
     case c.GET_FILE:
-      return { ...state, file: payload };
+      return { ...state, general_file: payload };
 
     case c.GET_FILE_FAIL:
-      return { ...state, file: null, loading: false };
-
+      return { ...state, general_file: null, loading: false };
     case c.GET_MAILS_SUCCESS:
       return { ...state, mails: payload, loading: false };
-
     case c.GET_MAILS_FAIL:
       return { ...state, mails: null, loading: false };
     case c.GET_MAIL:
