@@ -7,9 +7,10 @@ import { useSelector, useDispatch } from "react-redux";
 
 // import { addNewUser } from "../../../services/user.service";
 
-import { fetchGeneralFilesByMDA } from "../../../services/generalfiles.service";
 import { fetchAllMDAs } from "../../../services/mda.service";
-import { fetchAllDepts, fetchDept } from "../../../services/dept.service";
+import { fetchAllDepts } from "../../../services/dept.service";
+import { getAllDeptsFail } from "../../../actions/operations";
+import { addNewUser } from "../../../services/user.service";
 
 const NewUser = () => {
   const dispatch = useDispatch();
@@ -17,7 +18,6 @@ const NewUser = () => {
   let { message, err_message } = useSelector((state) => state.messages);
   let { mdas, depts } = useSelector((state) => state.operations);
 
-  const [error, setError] = useState("");
   const [newUser, setNewUser] = useState({
     surname: "",
     firstname: "",
@@ -29,7 +29,7 @@ const NewUser = () => {
     role: "",
   });
   const [confirmPassword, setConfirmPassword] = useState("");
-
+  const [error, setError] = useState(null);
   const [newUserError, setNewUserError] = useState({
     surname: null,
     firstname: null,
@@ -41,7 +41,7 @@ const NewUser = () => {
     post: null,
     role: null,
   });
-  const [mdaID, setMdaID] = useState("");
+  // const [mdaID, setMdaID] = useState("");
 
   const roles = [
     "Admin",
@@ -50,14 +50,6 @@ const NewUser = () => {
     "Director",
     "Registry Officer",
   ];
-
-  const mdaHandler = (e) => {
-    if (e.currentTarget.value !== "") {
-      console.log(e.target.value);
-      getDepartments(e.target.value);
-      setMdaID(e.currentTarget.value);
-    }
-  };
 
   const onChangeHandler = (e) => {
     if (e.target.id === "surname") {
@@ -167,6 +159,81 @@ const NewUser = () => {
       }
       setConfirmPassword(e.currentTarget.value);
     }
+
+    if (e.target.id === "mda") {
+      if (e.currentTarget.value !== "") {
+        getDepartments(e.target.value);
+
+        setNewUserError({
+          ...newUserError,
+          mda: null,
+        });
+      } else {
+        setNewUserError({
+          ...newUserError,
+          mda: "Choose an MDA",
+        });
+        dispatch(getAllDeptsFail());
+      }
+      setNewUser({
+        ...newUser,
+        [e.target.id]: e.currentTarget.value,
+      });
+    }
+
+    if (e.target.id === "department") {
+      if (e.currentTarget.value !== "") {
+        setNewUserError({
+          ...newUserError,
+          department: null,
+        });
+      } else {
+        setNewUserError({
+          ...newUserError,
+          department: "Choose a department",
+        });
+      }
+      setNewUser({
+        ...newUser,
+        [e.target.id]: e.currentTarget.value,
+      });
+    }
+
+    if (e.target.id === "post") {
+      if (e.currentTarget.value !== "") {
+        setNewUserError({
+          ...newUserError,
+          post: null,
+        });
+      } else {
+        setNewUserError({
+          ...newUserError,
+          post: "Position field cannot be empty",
+        });
+      }
+      setNewUser({
+        ...newUser,
+        [e.target.id]: e.currentTarget.value,
+      });
+    }
+
+    if (e.target.id === "role") {
+      if (e.currentTarget.value !== "") {
+        setNewUserError({
+          ...newUserError,
+          role: null,
+        });
+      } else {
+        setNewUserError({
+          ...newUserError,
+          role: "Choose a role",
+        });
+      }
+      setNewUser({
+        ...newUser,
+        [e.target.id]: e.currentTarget.value,
+      });
+    }
   };
 
   const validateEmail = (email) => {
@@ -175,18 +242,36 @@ const NewUser = () => {
     return re.test(email);
   };
 
-  const getDept = (mdaId, deptId) => {
-    dispatch(fetchDept(mdaId, deptId));
-  };
-
   const getDepartments = async (id) => {
     if (id !== "") {
       await dispatch(fetchAllDepts(id));
     }
   };
 
-  const getFilesByMDA = (mdaShortName) => {
-    dispatch(fetchGeneralFilesByMDA(mdaShortName));
+  const registerUser = (e) => {
+    e.preventDefault();
+    if (
+      newUserError.password ||
+      newUser.post === "" ||
+      newUser.surname === "" ||
+      newUser.firstname === "" ||
+      newUser.mda === "" ||
+      newUser.department === ""
+    ) {
+      setError("All fields are required");
+    } else if (
+      newUserError.password ||
+      newUserError.post ||
+      newUserError.surname ||
+      newUserError.firstname ||
+      newUserError.mda ||
+      newUserError.department
+    ) {
+      setError("Error in Form submission!");
+    } else {
+      dispatch(addNewUser(newUser));
+      setError(null);
+    }
   };
 
   useEffect(() => {
@@ -212,12 +297,14 @@ const NewUser = () => {
             "
             >
               {error && <Alert variant="danger">{error}</Alert>}
-              {err_message && <Alert variant="danger">{err_message}</Alert>}
+              {err_message && (
+                <Alert variant="danger">{err_message.message}</Alert>
+              )}
               {message && <Alert variant="success">{message}</Alert>}
             </div>
 
             {/* form start */}
-            <form method="post">
+            <form method="post" onSubmit={registerUser}>
               <div className="card-body">
                 <div className="row">
                   <div className="col col-md-6">
@@ -364,7 +451,7 @@ const NewUser = () => {
                         <option value="">Choose MDA</option>
                         {mdas !== null &&
                           mdas.map((mda) => (
-                            <option key={mda._id} value={mda.shortName}>
+                            <option key={mda._id} value={mda._id}>
                               {mda.name}
                             </option>
                           ))}
@@ -391,11 +478,11 @@ const NewUser = () => {
                         value={newUser.department}
                         onChange={onChangeHandler}
                       >
-                        <option value="">Choose MDA</option>
-                        {mdas !== null &&
-                          mdas.map((mda) => (
-                            <option key={mda._id} value={mda.shortName}>
-                              {mda.name}
+                        <option value="">Choose Department</option>
+                        {depts !== null &&
+                          depts.map((dept) => (
+                            <option key={dept._id} value={dept._id}>
+                              {dept.deptName}
                             </option>
                           ))}
                       </select>

@@ -262,17 +262,30 @@ const EditIncomingMail = () => {
 
   useEffect(() => {
     if (general_files && mail) {
-      general_files.map((file) => {
-        if (file.incomingmails && file.incomingmails.length !== 0) {
-          file.incomingmails.map((im) => {
-            if (im._id === mail._id) {
-              setFileNo(file._id);
-              return;
+      // general_files.map((file) => {
+      //   if (file.incomingmails && file.incomingmails.length !== 0) {
+      //     file.incomingmails.map((im) => {
+      //       if (im._id === mail._id) {
+      //         setFileNo(file._id);
+      //         return;
+      //       }
+      //     });
+      //   }
+      //   return;
+      // });
+
+      for (let i = 0; i < general_files.length; i++) {
+        if (
+          general_files[i].incomingmails &&
+          general_files[i].incomingmails.length !== 0
+        ) {
+          for (let j = 0; j < general_files[i].incomingmails.length; j++) {
+            if (general_files[i].incomingmails[j]._id === mail._id) {
+              setFileNo(general_files[i]._id);
             }
-          });
+          }
         }
-        return;
-      });
+      }
     }
   }, [general_files, mail]);
 

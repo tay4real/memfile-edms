@@ -19,10 +19,9 @@ export function addNewUser(userInfo) {
       dispatch(clearErrMessage());
       const res = await fetchBackend.post("/auth/register", userInfo);
       if (res.data) {
-        dispatch(getUserProfile(res.data));
+        dispatch(setMessage(res.data));
       }
     } catch (error) {
-      dispatch(getUserProfileFail());
       dispatch(setErrMessage(error.response.data));
     }
   };
