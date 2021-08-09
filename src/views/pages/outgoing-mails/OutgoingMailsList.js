@@ -48,6 +48,7 @@ const OutgoingMailsList = () => {
   };
 
   const handleDelete = () => {
+    console.log(del.id);
     dispatch(deleteMail(del.id));
     getAllOutgoingMails();
     setDel({
@@ -80,7 +81,7 @@ const OutgoingMailsList = () => {
                   >
                     <thead>
                       <tr>
-                        <th onClick={() => getAllOutgoingMails()}>Ref No.</th>
+                        <th>Ref No.</th>
                         <th>Subject</th>
                         <th>Sender</th>
                         <th>Recipient</th>
