@@ -278,6 +278,9 @@ const NewUser = () => {
     dispatch(fetchAllMDAs());
   }, [dispatch]);
 
+
+  
+
   return (
     <div className="content-wrapper">
       {/* Content Header (Page header) */}
