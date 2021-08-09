@@ -429,9 +429,9 @@ const FileOperations = () => {
                                     onChange={fileChargeHandler}
                                   >
                                     {general_file &&
-                                    docType === "incomingmails" ? (
-                                      general_file.incomingmails.length !==
-                                        0 && (
+                                      docType === "incomingmails" &&
+                                      (general_file.incomingmails.length !==
+                                      0 ? (
                                         <>
                                           <option value="">
                                             Choose Document
@@ -447,12 +447,36 @@ const FileOperations = () => {
                                             )
                                           )}
                                         </>
-                                      )
-                                    ) : (
-                                      <option value="">
-                                        No Document Available
-                                      </option>
-                                    )}
+                                      ) : (
+                                        <option value="">
+                                          No Document Available
+                                        </option>
+                                      ))}
+
+                                    {general_file &&
+                                      docType === "outgoingmails" &&
+                                      (general_file.outgoingmails.length !==
+                                      0 ? (
+                                        <>
+                                          <option value="">
+                                            Choose Document
+                                          </option>
+                                          {general_file.outgoingmails.map(
+                                            (doc) => (
+                                              <option
+                                                key={doc._id}
+                                                value={doc._id}
+                                              >
+                                                {doc.ref_no} - {doc.subject}
+                                              </option>
+                                            )
+                                          )}
+                                        </>
+                                      ) : (
+                                        <option value="">
+                                          No Document Available
+                                        </option>
+                                      ))}
                                   </select>
                                 </div>
                               </div>
