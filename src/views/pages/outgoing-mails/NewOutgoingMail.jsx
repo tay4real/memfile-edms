@@ -15,19 +15,19 @@ import { Alert } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAllMDAs } from "../../../services/mda.service";
 
-import {
-  uploadMailScan,
-  editMail,
-} from "../../../services/incoming-mails.service";
+import { getMailFail } from "../../../actions/operations";
 
-import { clearMessage, clearErrMessage } from "../../../actions/message";
+import {
+  addNewMail,
+  uploadMailScan,
+  fetchOutgoingMailByID,
+  editMail,
+} from "../../../services/outgoing-mails.service";
 
 import {
   fetchGeneralFiles,
-  // addIncomingMailToFile,
+  addOutgoingMailToFile,
 } from "../../../services/generalfiles.service";
-
-import { getMailFail } from "../../../actions/operations";
 
 const baseStyle = {
   flex: 1,
@@ -57,19 +57,21 @@ const rejectStyle = {
   borderColor: "#ff1744",
 };
 
-const EditIncomingMail = () => {
+const NewOutgoingMail = () => {
   const dispatch = useDispatch();
 
   let { message, err_message } = useSelector((state) => state.messages);
-  let { mdas, mail, general_files } = useSelector((state) => state.operations);
+  let { mdas, outgoing_mail, general_files } = useSelector(
+    (state) => state.operations
+  );
 
-  const [incomingMail, setIncomingMail] = useState({
+  const [outgoingMail, setOutgoingMail] = useState({
     ref_no: "",
     subject: "",
     sender: "",
     recipient: "",
     dispatcher: "",
-    date_received: "",
+    date_sent: "",
   });
 
   const [file_no, setFileNo] = useState("");
@@ -95,7 +97,6 @@ const EditIncomingMail = () => {
     dispatch(fetchGeneralFiles());
   }, [dispatch]);
 
-  //set img extension
   useEffect(() => {
     if (upload_url)
       setImgSrcExt(extractImageFileExtensionFromBase64(upload_url));
@@ -179,8 +180,8 @@ const EditIncomingMail = () => {
         setShowOthers(true);
       } else {
         setShowOthers(false);
-        setIncomingMail({
-          ...incomingMail,
+        setOutgoingMail({
+          ...outgoingMail,
           [e.target.id]: e.currentTarget.value,
         });
       }
@@ -189,14 +190,14 @@ const EditIncomingMail = () => {
         setShowOthersRecipient(true);
       } else {
         setShowOthersRecipient(false);
-        setIncomingMail({
-          ...incomingMail,
+        setOutgoingMail({
+          ...outgoingMail,
           [e.target.id]: e.currentTarget.value,
         });
       }
     } else {
-      setIncomingMail({
-        ...incomingMail,
+      setOutgoingMail({
+        ...outgoingMail,
         [e.target.id]: e.currentTarget.value,
       });
     }
@@ -220,11 +221,20 @@ const EditIncomingMail = () => {
     }
   };
 
-  const updateIncomingMail = async (e) => {
+  const addOutgoingMail = async (e) => {
     e.preventDefault();
-    if (incomingMail.subject !== "") {
-      dispatch(editMail(updateMail.id, incomingMail));
+    if (outgoingMail.subject !== "") {
+      dispatch(addNewMail(outgoingMail));
     }
+
+    setOutgoingMail({
+      ref_no: "",
+      subject: "",
+      sender: "",
+      recipient: "",
+      dispatcher: "",
+      date_sent: "",
+    });
   };
 
   useEffect(() => {
@@ -232,80 +242,44 @@ const EditIncomingMail = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (message) {
-      if (message === "Incoming mail updated successfully") {
-        setSuccessMsgs(message);
-      }
+    if (outgoing_mail && outgoing_mail._id === undefined) {
+      dispatch(fetchOutgoingMailByID(outgoing_mail));
+
+      setSuccessMsgs(
+        "Outgoing mail added successfully. Scan and Upload outgoing-mail document"
+      );
+    }
+  }, [dispatch, outgoing_mail]);
+
+  useEffect(() => {
+    if (message === "Outgoing mail updated successfully") {
+      setSuccessMsgs(
+        "Outgoing mail added successfully. Scan and Upload incoming-mail document"
+      );
+    } else if (message === "Uploaded Successfully") {
+      setSuccessMsgs("File Upload Sucessful");
     }
   }, [message]);
 
   useEffect(() => {
-    if (mail && mail._id !== undefined) {
+    if (outgoing_mail && outgoing_mail._id !== undefined) {
       setUpdateMail({
-        id: mail._id,
-        ref_no: mail.ref_no,
-        subject: mail.subject,
+        id: outgoing_mail._id,
+        ref_no: outgoing_mail.ref_no,
+        subject: outgoing_mail.subject,
       });
-      setIncomingMail({
-        ref_no: mail.ref_no,
-        subject: mail.subject,
-        sender: mail.sender,
-        recipient: mail.recipient,
-        dispatcher: mail.dispatcher,
-        date_received: new Date(mail.date_received)
-          .toISOString()
-          .substring(0, 10),
-      });
-      setFileName(`${mail.ref_no}.` + imgSrcExt);
+      setFileName(`${outgoing_mail.ref_no}.` + imgSrcExt);
     }
-  }, [mail, imgSrcExt]);
+  }, [outgoing_mail, imgSrcExt]);
 
   useEffect(() => {
-    if (general_files && mail) {
-      // general_files.map((file) => {
-      //   if (file.incomingmails && file.incomingmails.length !== 0) {
-      //     file.incomingmails.map((im) => {
-      //       if (im._id === mail._id) {
-      //         setFileNo(file._id);
-      //         return;
-      //       }
-      //     });
-      //   }
-      //   return;
-      // });
-
-      for (let i = 0; i < general_files.length; i++) {
-        if (
-          general_files[i].incomingmails &&
-          general_files[i].incomingmails.length !== 0
-        ) {
-          for (let j = 0; j < general_files[i].incomingmails.length; j++) {
-            if (general_files[i].incomingmails[j]._id === mail._id) {
-              setFileNo(general_files[i]._id);
-            }
-          }
-        }
-      }
+    if (file_no !== "" && updateMail.id !== "") {
+      console.log(file_no, updateMail.id);
+      dispatch(addOutgoingMailToFile(file_no, updateMail.id));
+      dispatch(editMail(updateMail.id, { filing_status: 1 }));
+      setFileNo("");
     }
-  }, [general_files, mail]);
-
-  useEffect(() => {
-    if (successMsgs) {
-      setTimeout(() => {
-        setSuccessMsgs(null);
-      }, 5000);
-    }
-    if (message) {
-      setTimeout(() => {
-        dispatch(clearMessage());
-      }, 5000);
-    }
-    if (err_message) {
-      setTimeout(() => {
-        dispatch(clearErrMessage());
-      }, 5000);
-    }
-  }, [dispatch, message, successMsgs, err_message]);
+  }, [dispatch, file_no, updateMail]);
 
   return (
     <div className="content-wrapper">
@@ -323,7 +297,7 @@ const EditIncomingMail = () => {
                   className="col-12 text-center
             "
                 >
-                  {/* {error && <Alert variant="warning">{error}</Alert>} */}/
+                  {/* {error && <Alert variant="warning">{error}</Alert>} */}
                   {err_message && <Alert variant="danger">{err_message}</Alert>}
                   {successMsgs && (
                     <Alert variant="success">{successMsgs}</Alert>
@@ -335,7 +309,7 @@ const EditIncomingMail = () => {
 
           <div className="card card-default">
             <div className="card-header">
-              <h3 className="card-title">New Incoming Mail</h3>
+              <h3 className="card-title">New Outgoing Mail</h3>
               <div className="card-tools">
                 <button
                   type="button"
@@ -359,7 +333,7 @@ const EditIncomingMail = () => {
                       id="ref_no"
                       name="ref_no"
                       onChange={onChangeHandler}
-                      value={incomingMail.ref_no}
+                      value={outgoingMail.ref_no}
                       placeholder="Ref No."
                     />
                   </div>
@@ -400,10 +374,10 @@ const EditIncomingMail = () => {
                       name="sender"
                       className="form-control select2"
                       style={{ width: "100%" }}
-                      value={incomingMail.sender}
+                      value={outgoingMail.sender}
                       onChange={onChangeHandler}
                     >
-                      <option value="">Choose Sender</option>
+                      <option value="">Choose MDA</option>
                       <option value="others">Others</option>
                       {mdas !== null &&
                         mdas.map((mda) => (
@@ -429,7 +403,7 @@ const EditIncomingMail = () => {
                       id="sender"
                       name="sender"
                       onChange={onChangeHandler}
-                      value={incomingMail.sender}
+                      value={outgoingMail.sender}
                       placeholder="Sender"
                     />
                   </div>
@@ -446,7 +420,7 @@ const EditIncomingMail = () => {
                       name="recipient"
                       className="form-control select2"
                       style={{ width: "100%" }}
-                      value={incomingMail.recipient}
+                      value={outgoingMail.recipient}
                       onChange={onChangeHandler}
                     >
                       <option value="">Choose Receiver-</option>
@@ -477,7 +451,7 @@ const EditIncomingMail = () => {
                       id="recipient"
                       name="recipient"
                       onChange={onChangeHandler}
-                      value={incomingMail.recipient}
+                      value={outgoingMail.recipient}
                       placeholder="Reciever"
                     />
                   </div>
@@ -495,7 +469,7 @@ const EditIncomingMail = () => {
                       id="subject"
                       name="subject"
                       onChange={onChangeHandler}
-                      value={incomingMail.subject}
+                      value={outgoingMail.subject}
                       placeholder="Subject"
                     />
                   </div>
@@ -508,10 +482,10 @@ const EditIncomingMail = () => {
                     <input
                       type="date"
                       className="form-control"
-                      id="date_received"
-                      name="date_received"
+                      id="date_sent"
+                      name="date_sent"
                       onChange={onChangeHandler}
-                      value={incomingMail.date_received}
+                      value={outgoingMail.date_sent}
                       placeholder="Date Received"
                     />
                   </div>
@@ -522,7 +496,7 @@ const EditIncomingMail = () => {
             <div className="card-footer">
               <button
                 type="submit"
-                onClick={updateIncomingMail}
+                onClick={addOutgoingMail}
                 className="btn btn-primary"
               >
                 Save
@@ -629,4 +603,4 @@ const EditIncomingMail = () => {
   );
 };
 
-export default EditIncomingMail;
+export default NewOutgoingMail;

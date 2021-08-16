@@ -12,7 +12,7 @@ import axios from "axios";
 // });
 
 export const fetchBackend = axios.create({
-  baseURL: process.env.REACT_APP_BACKEND_URL,
+  baseURL: process.env.REACT_APP_DEV_BACKEND_URL,
   headers: {
     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     "Content-type": "application/json",

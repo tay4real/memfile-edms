@@ -1,9 +1,9 @@
 import { fetchBackend } from "./index";
 import {
-  getMailsFail,
-  getMailsSucess,
-  getMail,
-  getMailFail,
+  getOutgoingMailsFail,
+  getOutgoingMailsSuccess,
+  getOutgoingMail,
+  getOutgoingMailFail,
 } from "../actions/operations";
 import {
   setMessage,
@@ -17,9 +17,9 @@ export function fetchAllOutgoingMails() {
     try {
       dispatch(clearErrMessage());
       const res = await fetchBackend.get("/outgoing-mails");
-      dispatch(getMailsSucess(res.data));
+      dispatch(getOutgoingMailsSuccess(res.data));
     } catch (error) {
-      dispatch(getMailsFail());
+      dispatch(getOutgoingMailsFail());
       dispatch(setErrMessage(error.response.data));
     }
   };
@@ -30,9 +30,9 @@ export function searchOutgoingMails(query) {
     try {
       dispatch(clearErrMessage());
       const res = await fetchBackend.get(`/outgoing-mails?${query}`);
-      dispatch(getMailsSucess(res.data));
+      dispatch(getOutgoingMailsSuccess(res.data));
     } catch (error) {
-      dispatch(getMailsFail());
+      dispatch(getOutgoingMailsFail());
       dispatch(setErrMessage(error.response.data));
     }
   };
@@ -43,9 +43,9 @@ export function fetchOutgoingMailByID(mailID) {
     try {
       dispatch(clearErrMessage());
       const res = await fetchBackend.get(`/outgoing-mails/${mailID}`);
-      dispatch(getMail(res.data));
+      dispatch(getOutgoingMail(res.data));
     } catch (error) {
-      dispatch(getMailFail());
+      dispatch(getOutgoingMailFail());
       dispatch(setErrMessage(error.response.data));
     }
   };
@@ -57,9 +57,9 @@ export function addNewMail(mail) {
       dispatch(clearErrMessage());
       dispatch(clearMessage());
       const res = await fetchBackend.post("/outgoing-mails", mail);
-      dispatch(getMail(res.data));
+      dispatch(getOutgoingMail(res.data));
     } catch (error) {
-      dispatch(getMailFail());
+      dispatch(getOutgoingMailFail());
       dispatch(setErrMessage(error.response.data));
     }
   };

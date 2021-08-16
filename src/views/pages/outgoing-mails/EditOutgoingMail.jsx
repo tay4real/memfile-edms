@@ -16,17 +16,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchAllMDAs } from "../../../services/mda.service";
 
 import {
-  addNewMail,
   uploadMailScan,
-  fetchIncomingMailByID,
   editMail,
-} from "../../../services/incoming-mails.service";
+} from "../../../services/outgoing-mails.service";
+
 import { clearMessage, clearErrMessage } from "../../../actions/message";
 
 import {
   fetchGeneralFiles,
-  addIncomingMailToFile,
+  // addIncomingMailToFile,
 } from "../../../services/generalfiles.service";
+
 import { getMailFail } from "../../../actions/operations";
 
 const baseStyle = {
@@ -57,19 +57,21 @@ const rejectStyle = {
   borderColor: "#ff1744",
 };
 
-const NewIncomingMail = () => {
+const EditOutgoingMail = () => {
   const dispatch = useDispatch();
 
   let { message, err_message } = useSelector((state) => state.messages);
-  let { mdas, mail, general_files } = useSelector((state) => state.operations);
+  let { mdas, outgoing_mail, general_files } = useSelector(
+    (state) => state.operations
+  );
 
-  const [incomingMail, setIncomingMail] = useState({
+  const [outgoingMail, setOutgoingMail] = useState({
     ref_no: "",
     subject: "",
     sender: "",
     recipient: "",
     dispatcher: "",
-    date_received: "",
+    date_sent: "",
   });
 
   const [file_no, setFileNo] = useState("");
@@ -86,7 +88,7 @@ const NewIncomingMail = () => {
   const [upload_url, setUploadUrl] = useState("");
 
   const [imgSrcExt, setImgSrcExt] = useState(null);
-  //const [errorMsgs, setErrorMsgs] = useState([]);
+  // const [errorMsgs, setErrorMsgs] = useState([]);
   const [successMsgs, setSuccessMsgs] = useState(null);
 
   const [fileName, setFileName] = useState(null);
@@ -167,36 +169,35 @@ const NewIncomingMail = () => {
   };
 
   const handleUpload = () => {
-    console.log(fileName);
     upload(upload_url, fileName);
     setSuccessMsgs("Upload in progress...");
     setUploadUrl("");
   };
 
   const onChangeHandler = (e) => {
-    if (e.target.name === "sender") {
+    if (e.target.id === "sender") {
       if (e.currentTarget.value === "others") {
         setShowOthers(true);
       } else {
         setShowOthers(false);
-        setIncomingMail({
-          ...incomingMail,
+        setOutgoingMail({
+          ...outgoingMail,
           [e.target.id]: e.currentTarget.value,
         });
       }
-    } else if (e.target.name === "recipient") {
+    } else if (e.target.id === "recipient") {
       if (e.currentTarget.value === "others") {
         setShowOthersRecipient(true);
       } else {
         setShowOthersRecipient(false);
-        setIncomingMail({
-          ...incomingMail,
-          [e.target.name]: e.currentTarget.value,
+        setOutgoingMail({
+          ...outgoingMail,
+          [e.target.id]: e.currentTarget.value,
         });
       }
     } else {
-      setIncomingMail({
-        ...incomingMail,
+      setOutgoingMail({
+        ...outgoingMail,
         [e.target.id]: e.currentTarget.value,
       });
     }
@@ -220,20 +221,11 @@ const NewIncomingMail = () => {
     }
   };
 
-  const addIncomingMail = async (e) => {
+  const updateOutgoingMail = async (e) => {
     e.preventDefault();
-    if (incomingMail.subject !== "") {
-      dispatch(addNewMail(incomingMail));
+    if (outgoingMail.subject !== "") {
+      dispatch(editMail(updateMail.id, outgoingMail));
     }
-
-    setIncomingMail({
-      ref_no: "",
-      subject: "",
-      sender: "",
-      recipient: "",
-      dispatcher: "",
-      date_received: "",
-    });
   };
 
   useEffect(() => {
@@ -241,49 +233,50 @@ const NewIncomingMail = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (mail && mail._id === undefined) {
-      console.log(mail);
-      dispatch(fetchIncomingMailByID(mail));
-
-      setSuccessMsgs(
-        "Incoming mail added successfully. Scan and Upload incoming-mail document"
-      );
-    }
-  }, [dispatch, mail, message]);
-
-  useEffect(() => {
-    if (mail && mail._id !== undefined) {
-      console.log(mail._id);
-      setUpdateMail({
-        id: mail._id,
-        ref_no: mail.ref_no,
-        subject: mail.subject,
-      });
-      if (imgSrcExt) {
-        setFileName(`${mail.ref_no}.` + imgSrcExt);
+    if (message) {
+      if (message === "Outgoing mail updated successfully") {
+        setSuccessMsgs(message);
       }
     }
-  }, [mail, imgSrcExt]);
-
-  console.log(fileName, imgSrcExt);
-  useEffect(() => {
-    if (file_no !== "" && updateMail.id !== "") {
-      console.log(file_no, updateMail.id);
-      dispatch(addIncomingMailToFile(file_no, updateMail.id));
-      dispatch(editMail(updateMail.id, { filing_status: 1 }));
-      setFileNo("");
-    }
-  }, [dispatch, file_no, updateMail]);
-
-  useEffect(() => {
-    if (message === "Document added to file successfully") {
-      setSuccessMsgs(
-        "Incoming mail added successfully. Scan and Upload incoming-mail document"
-      );
-    } else if (message === "Uploaded Successfully") {
-      setSuccessMsgs("File Upload Sucessful");
-    }
   }, [message]);
+
+  useEffect(() => {
+    if (outgoing_mail && outgoing_mail._id !== undefined) {
+      setUpdateMail({
+        id: outgoing_mail._id,
+        ref_no: outgoing_mail.ref_no,
+        subject: outgoing_mail.subject,
+      });
+      setOutgoingMail({
+        ref_no: outgoing_mail.ref_no,
+        subject: outgoing_mail.subject,
+        sender: outgoing_mail.sender,
+        recipient: outgoing_mail.recipient,
+        dispatcher: outgoing_mail.dispatcher,
+        date_sent: new Date(outgoing_mail.date_sent)
+          .toISOString()
+          .substring(0, 10),
+      });
+      setFileName(`${outgoing_mail.ref_no}.` + imgSrcExt);
+    }
+  }, [outgoing_mail, imgSrcExt]);
+
+  useEffect(() => {
+    if (general_files && outgoing_mail) {
+      for (let i = 0; i < general_files.length; i++) {
+        if (
+          general_files[i].outgoingmails &&
+          general_files[i].outgoingmails.length !== 0
+        ) {
+          for (let j = 0; j < general_files[i].outgoingmails.length; j++) {
+            if (general_files[i].outgoingmails[j]._id === outgoing_mail._id) {
+              setFileNo(general_files[i]._id);
+            }
+          }
+        }
+      }
+    }
+  }, [general_files, outgoing_mail]);
 
   useEffect(() => {
     if (successMsgs) {
@@ -291,17 +284,17 @@ const NewIncomingMail = () => {
         setSuccessMsgs(null);
       }, 5000);
     }
-    if (err_message) {
-      setTimeout(() => {
-        dispatch(clearErrMessage());
-      }, 5000);
-    }
     if (message) {
       setTimeout(() => {
         dispatch(clearMessage());
       }, 5000);
     }
-  }, [dispatch, successMsgs, err_message, message]);
+    if (err_message) {
+      setTimeout(() => {
+        dispatch(clearErrMessage());
+      }, 5000);
+    }
+  }, [dispatch, message, successMsgs, err_message]);
 
   return (
     <div className="content-wrapper">
@@ -319,8 +312,7 @@ const NewIncomingMail = () => {
                   className="col-12 text-center
             "
                 >
-                  {/* {error && <Alert variant="warning">{error}</Alert>} */}
-
+                  {/* {error && <Alert variant="warning">{error}</Alert>} */}/
                   {err_message && <Alert variant="danger">{err_message}</Alert>}
                   {successMsgs && (
                     <Alert variant="success">{successMsgs}</Alert>
@@ -332,7 +324,7 @@ const NewIncomingMail = () => {
 
           <div className="card card-default">
             <div className="card-header">
-              <h3 className="card-title">New Incoming Mail</h3>
+              <h3 className="card-title">New Outgoing Mail</h3>
               <div className="card-tools">
                 <button
                   type="button"
@@ -356,7 +348,7 @@ const NewIncomingMail = () => {
                       id="ref_no"
                       name="ref_no"
                       onChange={onChangeHandler}
-                      value={incomingMail.ref_no}
+                      value={outgoingMail.ref_no}
                       placeholder="Ref No."
                     />
                   </div>
@@ -397,7 +389,7 @@ const NewIncomingMail = () => {
                       name="sender"
                       className="form-control select2"
                       style={{ width: "100%" }}
-                      value={incomingMail.sender}
+                      value={outgoingMail.sender}
                       onChange={onChangeHandler}
                     >
                       <option value="">Choose Sender</option>
@@ -426,7 +418,7 @@ const NewIncomingMail = () => {
                       id="sender"
                       name="sender"
                       onChange={onChangeHandler}
-                      value={incomingMail.sender}
+                      value={outgoingMail.sender}
                       placeholder="Sender"
                     />
                   </div>
@@ -443,7 +435,7 @@ const NewIncomingMail = () => {
                       name="recipient"
                       className="form-control select2"
                       style={{ width: "100%" }}
-                      value={incomingMail.recipient}
+                      value={outgoingMail.recipient}
                       onChange={onChangeHandler}
                     >
                       <option value="">Choose Receiver-</option>
@@ -474,7 +466,7 @@ const NewIncomingMail = () => {
                       id="recipient"
                       name="recipient"
                       onChange={onChangeHandler}
-                      value={incomingMail.recipient}
+                      value={outgoingMail.recipient}
                       placeholder="Reciever"
                     />
                   </div>
@@ -492,7 +484,7 @@ const NewIncomingMail = () => {
                       id="subject"
                       name="subject"
                       onChange={onChangeHandler}
-                      value={incomingMail.subject}
+                      value={outgoingMail.subject}
                       placeholder="Subject"
                     />
                   </div>
@@ -501,15 +493,15 @@ const NewIncomingMail = () => {
                 <div className="col-12 col-sm-6">
                   {" "}
                   <div className="form-group">
-                    <label htmlFor="name">Date Received</label>
+                    <label htmlFor="name">Date Sent</label>
                     <input
                       type="date"
                       className="form-control"
-                      id="date_received"
-                      name="date_received"
+                      id="date_sent"
+                      name="date_sent"
                       onChange={onChangeHandler}
-                      value={incomingMail.date_received}
-                      placeholder="Date Received"
+                      value={outgoingMail.date_sent}
+                      placeholder="Date Sent"
                     />
                   </div>
                 </div>
@@ -519,7 +511,7 @@ const NewIncomingMail = () => {
             <div className="card-footer">
               <button
                 type="submit"
-                onClick={addIncomingMail}
+                onClick={updateOutgoingMail}
                 className="btn btn-primary"
               >
                 Save
@@ -554,7 +546,7 @@ const NewIncomingMail = () => {
                       type="text"
                       className="form-control"
                       disabled
-                      id="ref_no_2"
+                      id="ref_no"
                       name="ref_no"
                       onChange={onChangeHandler}
                       value={updateMail.ref_no}
@@ -570,7 +562,7 @@ const NewIncomingMail = () => {
                     <input
                       type="text"
                       className="form-control"
-                      id="subject_2"
+                      id="subject"
                       disabled
                       name="subject"
                       onChange={onChangeHandler}
@@ -626,4 +618,4 @@ const NewIncomingMail = () => {
   );
 };
 
-export default NewIncomingMail;
+export default EditOutgoingMail;
