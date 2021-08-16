@@ -13,7 +13,7 @@ import DeleteModal from "../../components/DeleteModal";
 
 const IncomingMailsList = () => {
   const dispatch = useDispatch();
-  let { mails, incoming_mails } = useSelector((state) => state.operations);
+  let { incoming_mails } = useSelector((state) => state.operations);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [del, setDel] = useState({
