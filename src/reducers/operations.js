@@ -1,3 +1,4 @@
+import { FALSE } from "node-sass";
 import { operations as c } from "../actions/constants";
 
 const initialState = {
@@ -5,10 +6,9 @@ const initialState = {
   dept: null,
   mdas: null,
   mda: null,
-  users: null,
+  users: [],
   user_profile: null,
   files: null,
-
   general_files: null,
   general_file: null,
   mails: null,
@@ -17,7 +17,7 @@ const initialState = {
   mail: null,
   incoming_mail: null,
   outgoing_mail: null,
-  loading: true,
+  loading: false,
 };
 
 export default function operations(state = initialState, action) {
@@ -50,7 +50,7 @@ export default function operations(state = initialState, action) {
       return { ...state, users: payload, loading: false };
 
     case c.GET_USERS_FAIL:
-      return { ...state, users: null, loading: true };
+      return { ...state, users: [], loading: true };
 
     case c.GET_USER_PROFILE:
       return { ...state, user_profile: payload, loading: false };

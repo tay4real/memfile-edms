@@ -209,7 +209,7 @@ const FileOperations = () => {
           <div className="card card-default">
             <div className="card-body">
               <div className="row">
-                <div className="col col-md-3  py-2 ">
+                <div className="col col-sm-12 col-md-3  py-2 ">
                   {" "}
                   <label>Operations</label>
                   <select
@@ -230,7 +230,7 @@ const FileOperations = () => {
                   </select>
                 </div>
 
-                <div className="col col-md-9">
+                <div className="col col-sm-12 col-md-9">
                   {operation === "" && (
                     <div
                       className="border rounded py-2 px-2 d-flex flex-column  justify-content-center align-items-center"

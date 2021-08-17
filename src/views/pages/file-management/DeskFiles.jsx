@@ -35,13 +35,13 @@ const DeskFiles = () => {
                   >
                     <thead>
                       <tr>
-                        <th>File No</th>
                         <th>File Title</th>
-                        <th>MDA</th>
-                        <th>No of Documents in File</th>
-                        <th>View Documents</th>
-                        <th>Edit File</th>
-                        <th>Delete File</th>
+                        <th>Document Subject</th>
+                        <th>Charged From</th>
+                        <th>Charge Comment</th>
+                        <th>View</th>
+                        <th>Charge</th>
+                        <th>Return</th>
                       </tr>
                     </thead>
                     <tbody>

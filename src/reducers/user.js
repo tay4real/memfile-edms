@@ -1,66 +1,36 @@
 import { operations as c } from "./constants";
 
-export const getUserStart = () => ({
-  type: c.GET_USER_START,
-});
+const initialState = {
+  users: [],
+  user_profile: {},
+  loading: false,
+};
 
-export const getUserSuccess = (user) => ({
-  type: c.GET_USER_SUCCESS,
-  payload: user,
-});
+export default function users(state = initialState, action) {
+  const { type, payload } = action;
+  switch (type) {
+    case "GET_ALL_USERS_START":
+      return { ...state, users: payload, loading: false };
 
-export const getUserFailure = () => ({
-  type: c.GET_USER_FAIL,
-});
+    case c.GET_ALL_USERS:
+      return { ...state, users: payload, loading: false };
 
-export const getUsersStart = () => ({
-  type: c.GET_USERS_START,
-});
+    case c.GET_USERS_FAIL:
+      return { ...state, users: [], loading: true };
 
-export const getUsersSuccess = (users) => ({
-  type: c.GET_USERS_SUCCESS,
-  payload: users,
-});
+    case c.GET_USER_PROFILE:
+      return { ...state, user_profile: payload, loading: false };
 
-export const getUsersFailure = () => ({
-  type: c.GET_USERS_FAIL,
-});
+    case c.GET_USER_PROFILE_FAIL:
+      return { ...state, user_profile: null, loading: true };
 
-export const createUserStart = () => ({
-  type: c.CREATE_USER_START,
-});
+    case c.GET_USER_BY_ID:
+      return { ...state, user_profile: payload, loading: false };
 
-export const createUserSuccess = (user) => ({
-  type: c.CREATE_USER_SUCCESS,
-  payload: user,
-});
+    case c.GET_USER_BY_ID_FAIL:
+      return { ...state, user_profile: null, loading: true };
 
-export const createUserFailure = () => ({
-  type: c.CREATE_USER_FAIL,
-});
-
-export const updateUserStart = () => ({
-  type: c.UPDATE_USER_START,
-});
-
-export const updateUserSuccess = (user) => ({
-  type: c.UPDATE_USER_SUCCESS,
-  payload: user,
-});
-
-export const updateUserFailure = () => ({
-  type: c.UPDATE_USER_FAIL,
-});
-
-export const deleteUserStart = () => ({
-  type: c.DELETE_USER_START,
-});
-
-export const deleteUserSuccess = (user) => ({
-  type: c.DELETE_USER_SUCCESS,
-  payload: user,
-});
-
-export const deleteUserFailure = () => ({
-  type: c.DELETE_USER_FAIL,
-});
+    default:
+      return state;
+  }
+}
