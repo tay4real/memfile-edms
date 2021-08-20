@@ -16,7 +16,7 @@ const NewUser = () => {
   const dispatch = useDispatch();
 
   let { message, err_message } = useSelector((state) => state.messages);
-  let { mdas, depts } = useSelector((state) => state.operations);
+  let { mdas, depts, mda } = useSelector((state) => state.operations);
 
   const [newUser, setNewUser] = useState({
     surname: "",
@@ -484,8 +484,14 @@ const NewUser = () => {
                         onChange={onChangeHandler}
                       >
                         <option value="">Choose Department</option>
-                        {depts !== null &&
-                          depts.map((dept) => (
+//                         {depts !== null &&
+//                           depts.map((dept) => (
+//                             <option key={dept._id} value={dept.deptName}>
+//                               {dept.deptName}
+//                             </option>
+//                           ))}
+ {mda !== null &&
+                          mda.departments.map((dept) => (
                             <option key={dept._id} value={dept.deptName}>
                               {dept.deptName}
                             </option>
