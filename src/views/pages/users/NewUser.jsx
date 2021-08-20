@@ -3,7 +3,7 @@ import ContentHeader from "../../components/ContentHeader";
 
 import { Alert } from "react-bootstrap";
 
-import { useSelector, useDispatch, useEffect } from "react-redux";
+import { useSelector, useDispatch} from "react-redux";
 
 // import { addNewUser } from "../../../services/user.service";
 
