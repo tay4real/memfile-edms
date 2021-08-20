@@ -17,6 +17,14 @@ const NewUser = () => {
 
   let { message, err_message } = useSelector((state) => state.messages);
   let { mdas, depts, mda } = useSelector((state) => state.operations);
+  
+  const [departments, setDepartments] = useState([]);
+  
+  if(mda){
+    set(mda[0].departments); 
+  }
+  
+  console.log(departments);
 
   const [newUser, setNewUser] = useState({
     surname: "",
@@ -492,13 +500,13 @@ const NewUser = () => {
 //                             </option>
 //                           ))}
 
- {(mda !== null)
-    && mda[0].departments.map((dept) => (
-                            <option key={dept._id} value={dept.deptName}>
-                              {dept.deptName}
-                            </option>
-                          ))}
-                      </select>
+//  {(mda !== null)
+//     && mda[0].departments.map((dept) => (
+//                             <option key={dept._id} value={dept.deptName}>
+//                               {dept.deptName}
+//                             </option>
+//                           ))}
+//                       </select>
                       {newUserError.department && (
                         <span className="text-danger">
                           {newUserError.department}
