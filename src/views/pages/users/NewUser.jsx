@@ -484,13 +484,16 @@ const NewUser = () => {
                         onChange={onChangeHandler}
                       >
                         <option value="">Choose Department</option>
+
 //                         {depts !== null &&
 //                           depts.map((dept) => (
 //                             <option key={dept._id} value={dept.deptName}>
 //                               {dept.deptName}
 //                             </option>
 //                           ))}
- { mda !== null && mda[0].departments.map((dept) => (
+
+ {(mda !== null)
+    && mda[0].departments.map((dept) => (
                             <option key={dept._id} value={dept.deptName}>
                               {dept.deptName}
                             </option>
