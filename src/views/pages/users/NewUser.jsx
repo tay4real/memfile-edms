@@ -494,7 +494,11 @@ const NewUser = () => {
                         onChange={onChangeHandler}
                       >
                         <option value="">Choose Department</option>
-
+                          {departments.map((dept) => (
+                            <option key={dept._id} value={dept.deptName}>
+                              {dept.deptName}
+                            </option>
+                          ))}
                      
                       </select>
                       {newUserError.department && (
