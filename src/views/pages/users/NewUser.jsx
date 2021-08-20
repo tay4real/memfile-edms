@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 // import { addNewUser } from "../../../services/user.service";
 
 import { fetchAllMDAs, searchMDAByName } from "../../../services/mda.service";
-import { fetchAllDepts } from "../../../services/dept.service";
+// import { fetchAllDepts } from "../../../services/dept.service";
 import { getAllDeptsFail } from "../../../actions/operations";
 import { addNewUser } from "../../../services/user.service";
 
