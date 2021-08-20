@@ -455,7 +455,7 @@ const NewUser = () => {
                         <option value="">Choose MDA</option>
                         {mdas !== null &&
                           mdas.map((mda) => (
-                            <option key={mda._id} value={mda._id}>
+                            <option key={mda._id} value={mda.name}>
                               {mda.name}
                             </option>
                           ))}
@@ -485,7 +485,7 @@ const NewUser = () => {
                         <option value="">Choose Department</option>
                         {depts !== null &&
                           depts.map((dept) => (
-                            <option key={dept._id} value={dept._id}>
+                            <option key={dept._id} value={dept.deptName}>
                               {dept.deptName}
                             </option>
                           ))}
