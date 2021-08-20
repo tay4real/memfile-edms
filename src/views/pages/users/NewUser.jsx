@@ -506,7 +506,7 @@ const NewUser = () => {
 //                               {dept.deptName}
 //                             </option>
 //                           ))}
-//                       </select>
+                      </select>
                       {newUserError.department && (
                         <span className="text-danger">
                           {newUserError.department}
