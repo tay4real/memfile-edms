@@ -3,7 +3,7 @@ import ContentHeader from "../../components/ContentHeader";
 
 import { Alert } from "react-bootstrap";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, useEffect } from "react-redux";
 
 // import { addNewUser } from "../../../services/user.service";
 
@@ -20,10 +20,12 @@ const NewUser = () => {
   
   const [departments, setDepartments] = useState([]);
   
-  if(mda){
+ 
+  useEffect(()=>{
+     if(mda){
      setDepartments(mda[0].departments); 
   }
-  
+  }, [mda]);
   console.log(departments);
 
   const [newUser, setNewUser] = useState({
