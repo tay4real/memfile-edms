@@ -21,7 +21,7 @@ const NewUser = () => {
   const [departments, setDepartments] = useState([]);
   
   if(mda){
-    set(mda[0].departments); 
+     setDepartments(mda[0].departments); 
   }
   
   console.log(departments);
