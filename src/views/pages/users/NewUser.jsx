@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 // import { addNewUser } from "../../../services/user.service";
 
-import { fetchAllMDAs } from "../../../services/mda.service";
+import { fetchAllMDAs, searchMDAByName } from "../../../services/mda.service";
 import { fetchAllDepts } from "../../../services/dept.service";
 import { getAllDeptsFail } from "../../../actions/operations";
 import { addNewUser } from "../../../services/user.service";
@@ -163,6 +163,7 @@ const NewUser = () => {
     if (e.target.id === "mda") {
       if (e.currentTarget.value !== "") {
         getDepartments(e.target.value);
+        searchMDAByName(e.target.value);
 
         setNewUserError({
           ...newUserError,
