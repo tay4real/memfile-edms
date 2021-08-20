@@ -24,7 +24,7 @@ import {
 const FileOperations = () => {
   const dispatch = useDispatch();
   let { user } = useSelector((state) => state.auth);
-  let { general_files, user_profile, users, general_file, incoming_mail, outgoing_mail } = useSelector(
+  let { general_files, user_profile, users, general_file, incoming_mail } = useSelector(
     (state) => state.operations
   );
   let { message, err_message } = useSelector((state) => state.messages);
