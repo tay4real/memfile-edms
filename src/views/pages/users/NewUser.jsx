@@ -163,7 +163,8 @@ const NewUser = () => {
     if (e.target.id === "mda") {
       if (e.currentTarget.value !== "") {
         //getDepartments(e.target.value);
-        searchMDAByName(e.target.value);
+        
+         dispatch(searchMDAByName(e.target.value));
 
         setNewUserError({
           ...newUserError,
