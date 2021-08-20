@@ -243,11 +243,11 @@ const NewUser = () => {
     return re.test(email);
   };
 
-  const getDepartments = async (id) => {
-    if (id !== "") {
-      await dispatch(fetchAllDepts(id));
-    }
-  };
+//   const getDepartments = async (id) => {
+//     if (id !== "") {
+//       await dispatch(fetchAllDepts(id));
+//     }
+//   };
 
   const registerUser = (e) => {
     e.preventDefault();
