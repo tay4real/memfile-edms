@@ -16,7 +16,7 @@ const NewUser = () => {
   const dispatch = useDispatch();
 
   let { message, err_message } = useSelector((state) => state.messages);
-  let { mdas, depts, mda } = useSelector((state) => state.operations);
+  let { mdas,  mda } = useSelector((state) => state.operations);
   
   const [departments, setDepartments] = useState([]);
   
