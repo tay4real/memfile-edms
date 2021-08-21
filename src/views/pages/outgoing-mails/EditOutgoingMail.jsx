@@ -24,7 +24,8 @@ import { clearMessage, clearErrMessage } from "../../../actions/message";
 
 import {
   fetchGeneralFiles,
-  // addIncomingMailToFile,
+  addIncomingMailToFile,
+  removeMailFromFile,
 } from "../../../services/generalfiles.service";
 
 import { getMailFail } from "../../../actions/operations";
@@ -61,7 +62,7 @@ const EditOutgoingMail = () => {
   const dispatch = useDispatch();
 
   let { message, err_message } = useSelector((state) => state.messages);
-  let { mdas, outgoing_mail, general_files } = useSelector(
+  let { mdas, outgoing_mail, general_files, user_profile } = useSelector(
     (state) => state.operations
   );
 
@@ -92,6 +93,7 @@ const EditOutgoingMail = () => {
   const [successMsgs, setSuccessMsgs] = useState(null);
 
   const [fileName, setFileName] = useState(null);
+  const [temp_file_no, setTempFileNo] = useState("");
 
   useEffect(() => {
     dispatch(fetchGeneralFiles());
@@ -225,6 +227,14 @@ const EditOutgoingMail = () => {
     e.preventDefault();
     if (outgoingMail.subject !== "") {
       dispatch(editMail(updateMail.id, outgoingMail));
+    }
+    if (user_profile && (user_profile.role === "Admin") | "Registry Officer") {
+      if (file_no !== "" && file_no !== temp_file_no && updateMail.id !== "") {
+        console.log(file_no, temp_file_no, updateMail.id);
+        dispatch(removeMailFromFile(temp_file_no, updateMail.id));
+        dispatch(addIncomingMailToFile(file_no, updateMail.id));
+        dispatch(editMail(updateMail.id, { filing_status: 1 }));
+      }
     }
   };
 
