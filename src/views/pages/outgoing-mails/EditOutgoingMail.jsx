@@ -94,6 +94,7 @@ const EditOutgoingMail = () => {
 
   const [fileName, setFileName] = useState(null);
   const [temp_file_no, setTempFileNo] = useState("");
+  console.log(temp_file_no);
 
   useEffect(() => {
     dispatch(fetchGeneralFiles());
