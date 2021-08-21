@@ -87,7 +87,7 @@ const IncomingMailDetail = () => {
                   <strong>Mail Uploads:</strong> {}
                 </div>
                 <div className="row mt-2 p-2">
-                  <div className="col col-md-3 d-flex align-items-start justify-content-around">
+                  <div className="col col-sm-12 col-md-3 d-flex align-items-start justify-content-around">
                     {incoming_mail.upload_url.length !== 0 &&
                       incoming_mail.upload_url.map((url, key) => (
                         <div className="d-flex flex-column align-items-center">
@@ -105,7 +105,7 @@ const IncomingMailDetail = () => {
                         </div>
                       ))}
                   </div>
-                  <div className="col col-md-9">
+                  <div className="col col-sm-12 col-md-9">
                     {incoming_mail.upload_url[0] && (
                       <div className="d-flex flex-column align-items-center">
                         <img
