@@ -8,11 +8,15 @@ const initialState = {
   users: null,
   user_profile: null,
   files: null,
-  personal_files: null,
+
   general_files: null,
   general_file: null,
   mails: null,
+  incoming_mails: null,
+  outgoing_mails: null,
   mail: null,
+  incoming_mail: null,
+  outgoing_mail: null,
   loading: true,
 };
 
@@ -66,12 +70,6 @@ export default function operations(state = initialState, action) {
     case c.GET_ALLFILES_FAIL:
       return { ...state, files: null, loading: false };
 
-    case c.GET_PERSONALFILES:
-      return { ...state, personal_files: payload };
-
-    case c.GET_PERSONALFILES_FAIL:
-      return { ...state, personal_files: null, loading: false };
-
     case c.GET_GENERALFILES:
       return { ...state, general_files: payload };
 
@@ -85,14 +83,31 @@ export default function operations(state = initialState, action) {
       return { ...state, general_file: null, loading: false };
     case c.GET_MAILS_SUCCESS:
       return { ...state, mails: payload, loading: false };
+    case c.GET_INCOMING_MAILS_SUCCESS:
+      return { ...state, incoming_mails: payload, loading: false };
+    case c.GET_OUTGOING_MAILS_SUCCESS:
+      return { ...state, outgoing_mails: payload, loading: false };
+    case c.GET_INCOMING_MAILS_FAIL:
+      return { ...state, incoming_mails: null, loading: false };
+    case c.GET_OUTGOING_MAILS_FAIL:
+      return { ...state, outgoing_mails: null, loading: false };
     case c.GET_MAILS_FAIL:
       return { ...state, mails: null, loading: false };
     case c.GET_MAIL:
       return { ...state, mail: payload, loading: false };
 
+    case c.GET_INCOMING_MAIL_SUCCESS:
+      return { ...state, incoming_mail: payload, loading: false };
+
+    case c.GET_OUTGOING_MAIL_SUCCESS:
+      return { ...state, outgoing_mail: payload, loading: false };
+
     case c.GET_MAIL_FAIL:
       return { ...state, mail: null, loading: false };
-
+    case c.GET_INCOMING_MAIL_FAIL:
+      return { ...state, incoming_mail: null, loading: false };
+    case c.GET_OUTGOING_MAIL_FAIL:
+      return { ...state, outgoing_mail: null, loading: false };
     default:
       return state;
   }

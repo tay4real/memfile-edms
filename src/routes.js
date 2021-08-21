@@ -10,6 +10,9 @@ const NewIncomingMail = React.lazy(() =>
 const EditIncomingMail = React.lazy(() =>
   import("./views/pages/incoming-mails/EditIncomingMail")
 );
+const IncomingMailDetail = React.lazy(() =>
+  import("./views/pages/incoming-mails/IncomingMailDetail")
+);
 const OutgoingMailsList = React.lazy(() =>
   import("./views/pages/outgoing-mails/OutgoingMailsList")
 );
@@ -18,6 +21,9 @@ const NewOutgoingMail = React.lazy(() =>
 );
 const EditOutgoingMail = React.lazy(() =>
   import("./views/pages/outgoing-mails/EditOutgoingMail")
+);
+const OutgoingMailDetail = React.lazy(() =>
+  import("./views/pages/outgoing-mails/OutgoingMailDetail")
 );
 const DeskFiles = React.lazy(() =>
   import("./views/pages/file-management/DeskFiles")
@@ -73,6 +79,11 @@ const routes = [
     component: EditIncomingMail,
   },
   {
+    path: "/incoming-mails/view",
+    name: "Incoming Mail",
+    component: IncomingMailDetail,
+  },
+  {
     path: "/outgoing-mails",
     exact: true,
     name: "Outgoing Mails List",
@@ -87,6 +98,11 @@ const routes = [
     path: "/outgoing-mails/edit",
     name: "Edit Outgoing Mail",
     component: EditOutgoingMail,
+  },
+  {
+    path: "/outgoing-mails/view",
+    name: "Outgoing Mail",
+    component: OutgoingMailDetail,
   },
   {
     path: "/files",

@@ -17,9 +17,6 @@ const NotificationDropdown = () => {
       dispatch(fetchUserByID(user._id));
     }
   }, [dispatch, user]);
-  if (user_profile) {
-    console.log(user_profile.generalfiles.length);
-  }
 
   return (
     <li className="nav-item dropdown">

@@ -4,16 +4,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
 import {
-  fetchIncomingMails,
+  fetchAllOutgoingMails,
   deleteMail,
-  fetchIncomingMailByID,
-} from "../../../services/incoming-mails.service";
+  fetchOutgoingMailByID,
+} from "../../../services/outgoing-mails.service";
 
 import DeleteModal from "../../components/DeleteModal";
 
-const IncomingMailsList = () => {
+const OutgoingMailsList = () => {
   const dispatch = useDispatch();
-  let { mails } = useSelector((state) => state.operations);
+  let { outgoing_mails } = useSelector((state) => state.operations);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [del, setDel] = useState({
@@ -21,12 +21,12 @@ const IncomingMailsList = () => {
     name: "",
   });
 
-  const getAllIncomingMails = () => {
-    dispatch(fetchIncomingMails());
+  const getAllOutgoingMails = () => {
+    dispatch(fetchAllOutgoingMails());
   };
 
-  const getIncomingMails = (id) => {
-    dispatch(fetchIncomingMailByID(id));
+  const getOutgoingMails = (id) => {
+    dispatch(fetchOutgoingMailByID(id));
   };
 
   const handleShowDeleteModal = (id, name) => {
@@ -47,8 +47,9 @@ const IncomingMailsList = () => {
   };
 
   const handleDelete = () => {
+    console.log(del.id);
     dispatch(deleteMail(del.id));
-    getAllIncomingMails();
+    getAllOutgoingMails();
     setDel({
       id: "",
       name: "",
@@ -58,9 +59,8 @@ const IncomingMailsList = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchIncomingMails());
+    dispatch(fetchAllOutgoingMails());
   }, [dispatch]);
-
   return (
     <div className="content-wrapper">
       {/* Content Header (Page header) */}
@@ -92,9 +92,9 @@ const IncomingMailsList = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {mails !== null ? (
-                        mails.length !== 0 ? (
-                          mails.map((mail) => (
+                      {outgoing_mails !== null ? (
+                        outgoing_mails.length !== 0 ? (
+                          outgoing_mails.map((mail) => (
                             <tr key={mail._id}>
                               <td className="">
                                 <div className="d-flex align-items-center">
@@ -133,22 +133,25 @@ const IncomingMailsList = () => {
                               </td>
                               <td className="whitespace-nowrap">
                                 <div className="text-sm text-gray-500">
-                                  {mail.date_received &&
-                                    new Date(mail.date_received)
+                                  {mail.date_sent &&
+                                    new Date(mail.date_sent)
                                       .toISOString()
                                       .substring(0, 10)}
                                 </div>
                               </td>
                               <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                                <Link to={`/departments/edit/`}>
+                                <Link
+                                  to={`/outgoing-mails/view`}
+                                  onClick={() => getOutgoingMails(mail._id)}
+                                >
                                   <span className="badge bg-primary">View</span>
                                 </Link>
                               </td>
 
                               <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
                                 <Link
-                                  to={`/incoming-mails/edit`}
-                                  onClick={() => getIncomingMails(mail._id)}
+                                  to={`/outgoing-mails/edit`}
+                                  onClick={() => getOutgoingMails(mail._id)}
                                 >
                                   <span className="badge bg-primary">Edit</span>
                                 </Link>
@@ -210,4 +213,4 @@ const IncomingMailsList = () => {
   );
 };
 
-export default IncomingMailsList;
+export default OutgoingMailsList;

@@ -1,0 +1,30 @@
+/* .navbar-search-block {
+  position: relative;
+
+} */
+
+.searchResult {
+  padding: 20px;
+  position: absolute;
+  top: 50px;
+  z-index: 999;
+  width: 97%;
+  min-height: 10vh;
+  max-height: 50vh;
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px;
+}
+
+.displaySearch {
+  display: flex;
+  align-items: baseline;
+  color: inherit;
+  background-color: lightblue;
+  border-radius: 10px;
+  margin-bottom: 5px;
+  padding: 5px;
+}
+
+.keyword {
+  margin-right: 10px;
+}

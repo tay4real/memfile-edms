@@ -3,12 +3,12 @@ import ContentHeader from "../../components/ContentHeader";
 
 import { Alert } from "react-bootstrap";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch} from "react-redux";
 
 // import { addNewUser } from "../../../services/user.service";
 
-import { fetchAllMDAs } from "../../../services/mda.service";
-import { fetchAllDepts } from "../../../services/dept.service";
+import { fetchAllMDAs, searchMDAByName } from "../../../services/mda.service";
+// import { fetchAllDepts } from "../../../services/dept.service";
 import { getAllDeptsFail } from "../../../actions/operations";
 import { addNewUser } from "../../../services/user.service";
 
@@ -16,7 +16,17 @@ const NewUser = () => {
   const dispatch = useDispatch();
 
   let { message, err_message } = useSelector((state) => state.messages);
-  let { mdas, depts } = useSelector((state) => state.operations);
+  let { mdas,  mda } = useSelector((state) => state.operations);
+  
+  const [departments, setDepartments] = useState([]);
+  
+ 
+  useEffect(()=>{
+     if(mda){
+     setDepartments(mda[0].departments); 
+  }
+  }, [mda]);
+  console.log(departments);
 
   const [newUser, setNewUser] = useState({
     surname: "",
@@ -162,7 +172,9 @@ const NewUser = () => {
 
     if (e.target.id === "mda") {
       if (e.currentTarget.value !== "") {
-        getDepartments(e.target.value);
+        //getDepartments(e.target.value);
+        
+         dispatch(searchMDAByName(e.target.value));
 
         setNewUserError({
           ...newUserError,
@@ -242,11 +254,11 @@ const NewUser = () => {
     return re.test(email);
   };
 
-  const getDepartments = async (id) => {
-    if (id !== "") {
-      await dispatch(fetchAllDepts(id));
-    }
-  };
+//   const getDepartments = async (id) => {
+//     if (id !== "") {
+//       await dispatch(fetchAllDepts(id));
+//     }
+//   };
 
   const registerUser = (e) => {
     e.preventDefault();
@@ -454,7 +466,7 @@ const NewUser = () => {
                         <option value="">Choose MDA</option>
                         {mdas !== null &&
                           mdas.map((mda) => (
-                            <option key={mda._id} value={mda._id}>
+                            <option key={mda._id} value={mda.name}>
                               {mda.name}
                             </option>
                           ))}
@@ -482,12 +494,12 @@ const NewUser = () => {
                         onChange={onChangeHandler}
                       >
                         <option value="">Choose Department</option>
-                        {depts !== null &&
-                          depts.map((dept) => (
-                            <option key={dept._id} value={dept._id}>
+                          {departments.map((dept) => (
+                            <option key={dept._id} value={dept.deptName}>
                               {dept.deptName}
                             </option>
                           ))}
+                     
                       </select>
                       {newUserError.department && (
                         <span className="text-danger">

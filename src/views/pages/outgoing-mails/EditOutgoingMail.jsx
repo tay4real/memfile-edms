@@ -15,19 +15,20 @@ import { Alert } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAllMDAs } from "../../../services/mda.service";
 
-import { getMailFail } from "../../../actions/operations";
-
 import {
-  addNewMail,
   uploadMailScan,
-  fetchOutgoingMailByID,
   editMail,
 } from "../../../services/outgoing-mails.service";
 
+import { clearMessage, clearErrMessage } from "../../../actions/message";
+
 import {
   fetchGeneralFiles,
-  addOutgoingMailToFile,
+  addIncomingMailToFile,
+  removeMailFromFile,
 } from "../../../services/generalfiles.service";
+
+import { getMailFail } from "../../../actions/operations";
 
 const baseStyle = {
   flex: 1,
@@ -57,11 +58,13 @@ const rejectStyle = {
   borderColor: "#ff1744",
 };
 
-const NewOutgoingMail = () => {
+const EditOutgoingMail = () => {
   const dispatch = useDispatch();
 
   let { message, err_message } = useSelector((state) => state.messages);
-  let { mdas, mail, general_files } = useSelector((state) => state.operations);
+  let { mdas, outgoing_mail, general_files, user_profile } = useSelector(
+    (state) => state.operations
+  );
 
   const [outgoingMail, setOutgoingMail] = useState({
     ref_no: "",
@@ -90,6 +93,7 @@ const NewOutgoingMail = () => {
   const [successMsgs, setSuccessMsgs] = useState(null);
 
   const [fileName, setFileName] = useState(null);
+  const [temp_file_no, setTempFileNo] = useState("");
 
   useEffect(() => {
     dispatch(fetchGeneralFiles());
@@ -219,20 +223,19 @@ const NewOutgoingMail = () => {
     }
   };
 
-  const addOutgoingMail = async (e) => {
+  const updateOutgoingMail = async (e) => {
     e.preventDefault();
     if (outgoingMail.subject !== "") {
-      dispatch(addNewMail(outgoingMail));
+      dispatch(editMail(updateMail.id, outgoingMail));
     }
-
-    setOutgoingMail({
-      ref_no: "",
-      subject: "",
-      sender: "",
-      recipient: "",
-      dispatcher: "",
-      date_sent: "",
-    });
+    if (user_profile && (user_profile.role === "Admin") | "Registry Officer") {
+      if (file_no !== "" && file_no !== temp_file_no && updateMail.id !== "") {
+        console.log(file_no, temp_file_no, updateMail.id);
+        dispatch(removeMailFromFile(temp_file_no, updateMail.id));
+        dispatch(addIncomingMailToFile(file_no, updateMail.id));
+        dispatch(editMail(updateMail.id, { filing_status: 1 }));
+      }
+    }
   };
 
   useEffect(() => {
@@ -240,46 +243,68 @@ const NewOutgoingMail = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (mail && mail._id === undefined) {
-      console.log(mail);
-      dispatch(fetchOutgoingMailByID(mail));
-
-      setSuccessMsgs(
-        "Outgoing mail added successfully. Scan and Upload outgoing-mail document"
-      );
-    }
-  }, [dispatch, mail]);
-
-  useEffect(() => {
-    if (message === "Outgoing mail updated successfully") {
-      setSuccessMsgs(
-        "Outgoing mail added successfully. Scan and Upload incoming-mail document"
-      );
-    } else if (message === "Uploaded Successfully") {
-      setSuccessMsgs("File Upload Sucessful");
+    if (message) {
+      if (message === "Outgoing mail updated successfully") {
+        setSuccessMsgs(message);
+      }
     }
   }, [message]);
 
   useEffect(() => {
-    if (mail && mail._id !== undefined) {
-      console.log(mail._id);
+    if (outgoing_mail && outgoing_mail._id !== undefined) {
       setUpdateMail({
-        id: mail._id,
-        ref_no: mail.ref_no,
-        subject: mail.subject,
+        id: outgoing_mail._id,
+        ref_no: outgoing_mail.ref_no,
+        subject: outgoing_mail.subject,
       });
-      setFileName(`${mail.ref_no}.` + imgSrcExt);
+      setOutgoingMail({
+        ref_no: outgoing_mail.ref_no,
+        subject: outgoing_mail.subject,
+        sender: outgoing_mail.sender,
+        recipient: outgoing_mail.recipient,
+        dispatcher: outgoing_mail.dispatcher,
+        date_sent: new Date(outgoing_mail.date_sent)
+          .toISOString()
+          .substring(0, 10),
+      });
+      setFileName(`${outgoing_mail.ref_no}.` + imgSrcExt);
     }
-  }, [mail, imgSrcExt]);
+  }, [outgoing_mail, imgSrcExt]);
 
   useEffect(() => {
-    if (file_no !== "" && updateMail.id !== "") {
-      console.log(file_no, updateMail.id);
-      dispatch(addOutgoingMailToFile(file_no, updateMail.id));
-      dispatch(editMail(updateMail.id, { filing_status: 1 }));
-      setFileNo("");
+    if (general_files && outgoing_mail) {
+      for (let i = 0; i < general_files.length; i++) {
+        if (
+          general_files[i].outgoingmails &&
+          general_files[i].outgoingmails.length !== 0
+        ) {
+          for (let j = 0; j < general_files[i].outgoingmails.length; j++) {
+            if (general_files[i].outgoingmails[j]._id === outgoing_mail._id) {
+              setFileNo(general_files[i]._id);
+            }
+          }
+        }
+      }
     }
-  }, [dispatch, file_no, updateMail]);
+  }, [general_files, outgoing_mail]);
+
+  useEffect(() => {
+    if (successMsgs) {
+      setTimeout(() => {
+        setSuccessMsgs(null);
+      }, 5000);
+    }
+    if (message) {
+      setTimeout(() => {
+        dispatch(clearMessage());
+      }, 5000);
+    }
+    if (err_message) {
+      setTimeout(() => {
+        dispatch(clearErrMessage());
+      }, 5000);
+    }
+  }, [dispatch, message, successMsgs, err_message]);
 
   return (
     <div className="content-wrapper">
@@ -297,7 +322,7 @@ const NewOutgoingMail = () => {
                   className="col-12 text-center
             "
                 >
-                  {/* {error && <Alert variant="warning">{error}</Alert>} */}
+                  {/* {error && <Alert variant="warning">{error}</Alert>} */}/
                   {err_message && <Alert variant="danger">{err_message}</Alert>}
                   {successMsgs && (
                     <Alert variant="success">{successMsgs}</Alert>
@@ -377,7 +402,7 @@ const NewOutgoingMail = () => {
                       value={outgoingMail.sender}
                       onChange={onChangeHandler}
                     >
-                      <option value="">Choose MDA</option>
+                      <option value="">Choose Sender</option>
                       <option value="others">Others</option>
                       {mdas !== null &&
                         mdas.map((mda) => (
@@ -478,7 +503,7 @@ const NewOutgoingMail = () => {
                 <div className="col-12 col-sm-6">
                   {" "}
                   <div className="form-group">
-                    <label htmlFor="name">Date Received</label>
+                    <label htmlFor="name">Date Sent</label>
                     <input
                       type="date"
                       className="form-control"
@@ -486,7 +511,7 @@ const NewOutgoingMail = () => {
                       name="date_sent"
                       onChange={onChangeHandler}
                       value={outgoingMail.date_sent}
-                      placeholder="Date Received"
+                      placeholder="Date Sent"
                     />
                   </div>
                 </div>
@@ -496,7 +521,7 @@ const NewOutgoingMail = () => {
             <div className="card-footer">
               <button
                 type="submit"
-                onClick={addOutgoingMail}
+                onClick={updateOutgoingMail}
                 className="btn btn-primary"
               >
                 Save
@@ -603,4 +628,4 @@ const NewOutgoingMail = () => {
   );
 };
 
-export default NewOutgoingMail;
+export default EditOutgoingMail;

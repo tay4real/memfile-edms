@@ -24,7 +24,7 @@ import {
 const FileOperations = () => {
   const dispatch = useDispatch();
   let { user } = useSelector((state) => state.auth);
-  let { general_files, user_profile, users, general_file, mail } = useSelector(
+  let { general_files, user_profile, users, general_file, incoming_mail } = useSelector(
     (state) => state.operations
   );
   let { message, err_message } = useSelector((state) => state.messages);
@@ -487,21 +487,21 @@ const FileOperations = () => {
                                 className="border p-2"
                                 style={{ minHeight: "30vh" }}
                               >
-                                {mail && (
+                                {incoming_mail && (
                                   <>
                                     <div className="row">
                                       <div className="col">
                                         <strong>Ref No: </strong>
-                                        {mail.ref_no}
+                                        {incoming_mail.ref_no}
                                       </div>
                                       <div className="col">
                                         <strong>Subject: </strong>
-                                        {mail.subject}
+                                        {incoming_mail.subject}
                                       </div>
                                     </div>
                                     <div className="row my-2">
                                       <div className="col">
-                                        <strong>Sender: </strong> {mail.sender}
+                                        <strong>Sender: </strong> {incoming_mail.sender}
                                       </div>
                                     </div>
                                     <div className="row my-2">
@@ -515,8 +515,8 @@ const FileOperations = () => {
                                           data-ride="carousel"
                                         >
                                           <ol className="carousel-indicators">
-                                            {mail.upload_url.length !== 0 &&
-                                              mail.upload_url.map(
+                                            {incoming_mail.upload_url.length !== 0 &&
+                                              incoming_mail.upload_url.map(
                                                 (url, key) => (
                                                   <>
                                                     <li
@@ -534,8 +534,8 @@ const FileOperations = () => {
                                           </ol>
 
                                           <div className="carousel-inner">
-                                            {mail.upload_url.length !== 0 ? (
-                                              mail.upload_url.map(
+                                            {incoming_mail.upload_url.length !== 0 ? (
+                                              incoming_mail.upload_url.map(
                                                 (url, key) => (
                                                   <>
                                                     <div
@@ -615,9 +615,9 @@ const FileOperations = () => {
                                             </tr>
                                           </thead>
                                           <tbody>
-                                            {mail.charge_comment.length !==
+                                            {incoming_mail.charge_comment.length !==
                                             0 ? (
-                                              mail.charge_comment.map(
+                                              incoming_mail.charge_comment.map(
                                                 (comment) => (
                                                   <tr key={comment._id}>
                                                     <td className="whitespace-nowrap">

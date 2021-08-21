@@ -85,23 +85,6 @@ export function getAllFilesFail() {
   };
 }
 
-export function getPersonalFiles(files) {
-  return (dispatch) => {
-    dispatch({
-      type: c.GET_PERSONALFILES,
-      payload: files,
-    });
-  };
-}
-
-export function getPersonalFilesFail() {
-  return (dispatch) => {
-    dispatch({
-      type: c.GET_PERSONALFILES_FAIL,
-    });
-  };
-}
-
 export function getGeneralFiles(files) {
   return (dispatch) => {
     dispatch({
@@ -145,10 +128,44 @@ export function getMailsSucess(mails) {
   };
 }
 
+export function getIncomingMailsSuccess(mails) {
+  return (dispatch) => {
+    dispatch({
+      type: c.GET_INCOMING_MAILS_SUCCESS,
+      payload: mails,
+    });
+  };
+}
+
+export function getOutgoingMailsSuccess(mails) {
+  return (dispatch) => {
+    dispatch({
+      type: c.GET_OUTGOING_MAILS_SUCCESS,
+      payload: mails,
+    });
+  };
+}
+
 export function getMailsFail() {
   return (dispatch) => {
     dispatch({
       type: c.GET_MAILS_FAIL,
+    });
+  };
+}
+
+export function getIncomingMailsFail() {
+  return (dispatch) => {
+    dispatch({
+      type: c.GET_INCOMING_MAILS_FAIL,
+    });
+  };
+}
+
+export function getOutgoingMailsFail() {
+  return (dispatch) => {
+    dispatch({
+      type: c.GET_OUTGOING_MAILS_FAIL,
     });
   };
 }
@@ -162,6 +179,24 @@ export function getMail(mail) {
   };
 }
 
+export function getIncomingMail(mail) {
+  return (dispatch) => {
+    dispatch({
+      type: c.GET_INCOMING_MAIL_SUCCESS,
+      payload: mail,
+    });
+  };
+}
+
+export function getOutgoingMail(mail) {
+  return (dispatch) => {
+    dispatch({
+      type: c.GET_OUTGOING_MAIL_SUCCESS,
+      payload: mail,
+    });
+  };
+}
+
 export function getMailFail() {
   return (dispatch) => {
     dispatch({
@@ -169,6 +204,23 @@ export function getMailFail() {
     });
   };
 }
+
+export function getIncomingMailFail() {
+  return (dispatch) => {
+    dispatch({
+      type: c.GET_MAIL_FAIL,
+    });
+  };
+}
+
+export function getOutgoingMailFail() {
+  return (dispatch) => {
+    dispatch({
+      type: c.GET_MAIL_FAIL,
+    });
+  };
+}
+
 export function getUserProfile(user) {
   return (dispatch) => {
     dispatch({

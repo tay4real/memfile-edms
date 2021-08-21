@@ -1,9 +1,9 @@
 import { fetchBackend } from "./index";
 import {
-  getMailsFail,
-  getMailsSucess,
-  getMail,
-  getMailFail,
+  getIncomingMailsFail,
+  getIncomingMailsSuccess,
+  getIncomingMail,
+  getIncomingMailFail,
 } from "../actions/operations";
 import {
   setMessage,
@@ -18,9 +18,9 @@ export function fetchIncomingMails() {
       dispatch(clearErrMessage());
 
       const res = await fetchBackend.get("/incoming-mails");
-      dispatch(getMailsSucess(res.data));
+      dispatch(getIncomingMailsSuccess(res.data));
     } catch (error) {
-      dispatch(getMailsFail());
+      dispatch(getIncomingMailsFail());
       dispatch(setErrMessage(error.response.data));
     }
   };
@@ -31,9 +31,9 @@ export function searchIncomingMails(query) {
     try {
       dispatch(clearErrMessage());
       const res = await fetchBackend.get(`/incoimng-mails?${query}`);
-      dispatch(getMailsSucess(res.data));
+      dispatch(getIncomingMailsSuccess(res.data));
     } catch (error) {
-      dispatch(getMailsFail());
+      dispatch(getIncomingMailsFail());
       dispatch(setErrMessage(error.response.data));
     }
   };
@@ -44,9 +44,9 @@ export function fetchIncomingMailByID(mailID) {
     try {
       dispatch(clearErrMessage());
       const res = await fetchBackend.get(`/incoming-mails/${mailID}`);
-      dispatch(getMail(res.data));
+      dispatch(getIncomingMail(res.data));
     } catch (error) {
-      dispatch(getMailFail());
+      dispatch(getIncomingMailFail());
       dispatch(setErrMessage(error.response.data));
     }
   };
@@ -58,9 +58,9 @@ export function addNewMail(mail) {
       dispatch(clearErrMessage());
 
       const res = await fetchBackend.post("/incoming-mails", mail);
-      dispatch(getMail(res.data));
+      dispatch(getIncomingMail(res.data));
     } catch (error) {
-      dispatch(getMailFail());
+      dispatch(getIncomingMailFail());
       dispatch(setErrMessage(error.response.data));
     }
   };
