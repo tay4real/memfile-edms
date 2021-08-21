@@ -24,7 +24,8 @@ import { clearMessage, clearErrMessage } from "../../../actions/message";
 
 import {
   fetchGeneralFiles,
-  // addIncomingMailToFile,
+  addIncomingMailToFile,
+  removeMailFromFile,
 } from "../../../services/generalfiles.service";
 
 import { getMailFail } from "../../../actions/operations";
@@ -61,7 +62,7 @@ const EditIncomingMail = () => {
   const dispatch = useDispatch();
 
   let { message, err_message } = useSelector((state) => state.messages);
-  let { mdas, incoming_mail, general_files } = useSelector(
+  let { mdas, incoming_mail, general_files, user_profile } = useSelector(
     (state) => state.operations
   );
 
@@ -71,15 +72,22 @@ const EditIncomingMail = () => {
     sender: "",
     recipient: "",
     dispatcher: "",
+    upload_url: [],
     date_received: "",
   });
 
   const [file_no, setFileNo] = useState("");
+  const [temp_file_no, setTempFileNo] = useState("");
 
   const [updateMail, setUpdateMail] = useState({
     id: "",
     ref_no: "",
     subject: "",
+  });
+
+  const [imgBig, setImgBig] = useState({
+    url: "",
+    index: "",
   });
 
   const [showOthers, setShowOthers] = useState(false);
@@ -227,6 +235,14 @@ const EditIncomingMail = () => {
     if (incomingMail.subject !== "") {
       dispatch(editMail(updateMail.id, incomingMail));
     }
+    if (user_profile && (user_profile.role === "Admin") | "Registry Officer") {
+      if (file_no !== "" && file_no !== temp_file_no && updateMail.id !== "") {
+        console.log(file_no, temp_file_no, updateMail.id);
+        dispatch(removeMailFromFile(temp_file_no, updateMail.id));
+        dispatch(addIncomingMailToFile(file_no, updateMail.id));
+        dispatch(editMail(updateMail.id, { filing_status: 1 }));
+      }
+    }
   };
 
   useEffect(() => {
@@ -254,6 +270,7 @@ const EditIncomingMail = () => {
         sender: incoming_mail.sender,
         recipient: incoming_mail.recipient,
         dispatcher: incoming_mail.dispatcher,
+        upload_url: incoming_mail.upload_url,
         date_received: new Date(incoming_mail.date_received)
           .toISOString()
           .substring(0, 10),
@@ -272,6 +289,7 @@ const EditIncomingMail = () => {
           for (let j = 0; j < general_files[i].incomingmails.length; j++) {
             if (general_files[i].incomingmails[j]._id === incoming_mail._id) {
               setFileNo(general_files[i]._id);
+              setTempFileNo(general_files[i]._id);
             }
           }
         }
@@ -313,7 +331,7 @@ const EditIncomingMail = () => {
                   className="col-12 text-center
             "
                 >
-                  {/* {error && <Alert variant="warning">{error}</Alert>} */}/
+                  {/* {error && <Alert variant="warning">{error}</Alert>} */}
                   {err_message && <Alert variant="danger">{err_message}</Alert>}
                   {successMsgs && (
                     <Alert variant="success">{successMsgs}</Alert>
@@ -325,7 +343,7 @@ const EditIncomingMail = () => {
 
           <div className="card card-default">
             <div className="card-header">
-              <h3 className="card-title">New Incoming Mail</h3>
+              <h3 className="card-title">Edit Incoming Mail</h3>
               <div className="card-tools">
                 <button
                   type="button"
@@ -515,7 +533,7 @@ const EditIncomingMail = () => {
                 onClick={updateIncomingMail}
                 className="btn btn-primary"
               >
-                Save
+                Update
               </button>
             </div>
           </div>
@@ -538,6 +556,50 @@ const EditIncomingMail = () => {
             </div>
             {/* /.card-header */}
             <div className="card-body">
+              <div className="row">
+                <div className="col col-sm-12 col-md-3 d-flex align-items-start justify-content-around">
+                  {incomingMail.upload_url.length !== 0 &&
+                    incomingMail.upload_url.map((url, key) => (
+                      <div className="d-flex flex-column align-items-center">
+                        <img
+                          key={`Page ${key + 1}`}
+                          src={url}
+                          alt={`Page ${key + 1}`}
+                          width="100"
+                          className="cursor-pointer"
+                          onClick={() =>
+                            setImgBig({ url: url, index: key + 1 })
+                          }
+                        />
+                        <span>{`Page ${key + 1}`}</span>
+                      </div>
+                    ))}
+                </div>
+                <div className="col col-sm-12 col-md-9">
+                  {incomingMail.upload_url[0] && (
+                    <div className="d-flex flex-column align-items-center">
+                      <img
+                        src={
+                          imgBig.url !== ""
+                            ? imgBig.url
+                            : incomingMail.upload_url[0]
+                        }
+                        alt={
+                          imgBig.index !== ""
+                            ? `Page ${imgBig.index}`
+                            : `Page 1`
+                        }
+                        width="80%"
+                      />
+                      <span className="pt-2">
+                        {imgBig.index !== ""
+                          ? `Page ${imgBig.index}`
+                          : `Page 1`}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
               <div className="row">
                 <div className="col-md-6">
                   {" "}
