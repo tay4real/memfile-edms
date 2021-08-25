@@ -5,9 +5,11 @@ import routes from "../../routes";
 
 const ContentHeader = () => {
   const currentLocation = useLocation().pathname;
+  console.log(currentLocation);
 
   const getRouteName = (pathname, routes) => {
     const currentRoute = routes.find((route) => route.path === pathname);
+    console.log(currentRoute.name);
     return currentRoute.name;
   };
 

@@ -48,6 +48,9 @@ const EditDepartment = React.lazy(() =>
 const GeneralFileList = React.lazy(() =>
   import("./views/pages/general-files/GeneralFileList")
 );
+const FileContent = React.lazy(() =>
+  import("./views/pages/general-files/FileContent")
+);
 const NewGeneralFile = React.lazy(() =>
   import("./views/pages/general-files/NewGeneralFile")
 );
@@ -168,6 +171,7 @@ const routes = [
     name: "General File List",
     component: GeneralFileList,
   },
+
   {
     path: "/general-files/add-new",
     name: "New General File",
@@ -178,6 +182,13 @@ const routes = [
     name: "Edit General File",
     component: EditGeneralFile,
   },
+
+  {
+    path: "/general-files/detail",
+    name: "File Content",
+    component: FileContent,
+  },
+
   {
     path: "/users",
     exact: true,

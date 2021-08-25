@@ -281,6 +281,7 @@ const EditOutgoingMail = () => {
           for (let j = 0; j < general_files[i].outgoingmails.length; j++) {
             if (general_files[i].outgoingmails[j]._id === outgoing_mail._id) {
               setFileNo(general_files[i]._id);
+              setTempFileNo(general_files[i]._id)
             }
           }
         }

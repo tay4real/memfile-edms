@@ -12,11 +12,11 @@ const EditGeneralFile = () => {
   const dispatch = useDispatch();
 
   let { message, err_message } = useSelector((state) => state.messages);
-  let { mdas, file } = useSelector((state) => state.operations);
+  let { mdas, general_file } = useSelector((state) => state.operations);
 
   // const [error, setError] = useState("");
 
-  const [editfile, setFile] = useState({
+  const [file, setFile] = useState({
     file_title: "",
     mdaShortName: "",
   });
@@ -32,21 +32,21 @@ const EditGeneralFile = () => {
   const editFile = async (e) => {
     e.preventDefault();
     if (fileId !== "") {
-      dispatch(updateFile(fileId, editfile));
+      dispatch(updateFile(fileId, file));
     }
   };
 
   useEffect(() => {
     dispatch(fetchAllMDAs());
 
-    if (file) {
+    if (general_file) {
       setFile({
-        file_title: file.file_title,
-        mdaShortName: file.mdaShortName,
+        file_title: general_file.file_title,
+        mdaShortName: general_file.mdaShortName,
       });
       setFileID(file._id);
     }
-  }, [dispatch, file]);
+  }, [dispatch, general_file]);
 
   return (
     <div className="content-wrapper">
@@ -79,7 +79,7 @@ const EditGeneralFile = () => {
                     name="mdaShortName"
                     className="form-control select2"
                     style={{ width: "100%" }}
-                    value={editfile.mdaShortName}
+                    value={file.mdaShortName}
                     onChange={onChangeHandler}
                   >
                     <option value="">Choose MDA</option>
@@ -100,7 +100,7 @@ const EditGeneralFile = () => {
                     id="file_title"
                     name="file_title"
                     onChange={onChangeHandler}
-                    value={editfile.file_title}
+                    value={file.file_title}
                     placeholder="File Title"
                   />
                 </div>

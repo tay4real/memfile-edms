@@ -108,13 +108,18 @@ const GeneralFileList = () => {
                               </td>
                               <td className="whitespace-nowrap">
                                 <div className="text-sm text-gray-500">
-                                  {file.incomingmails.length +
-                                    file.outgoingmails.length}
+                                  <span>
+                                    Incoming Mails: {file.incomingmails.length}
+                                  </span>
+                                  <br />
+                                  <span>
+                                    Outgoing Mails: {file.outgoingmails.length}
+                                  </span>
                                 </div>
                               </td>
 
                               <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                                <Link to={`/departments/edit/`}>
+                                <Link to={`/general-files/detail`}>
                                   <span className="badge bg-primary">View</span>
                                 </Link>
                               </td>
