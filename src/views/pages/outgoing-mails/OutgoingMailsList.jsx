@@ -85,7 +85,7 @@ const OutgoingMailsList = () => {
                         <th>Sender</th>
                         <th>Recipient</th>
                         <th>Preview</th>
-                        <th>Date Received</th>
+                        <th>Date Sent</th>
                         <th>View</th>
                         <th>Edit</th>
                         <th>Delete</th>

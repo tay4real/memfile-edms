@@ -119,7 +119,10 @@ const GeneralFileList = () => {
                               </td>
 
                               <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                                <Link to={`/general-files/detail`}>
+                                <Link
+                                  to={`/general-files/detail`}
+                                  onClick={() => getFile(file._id)}
+                                >
                                   <span className="badge bg-primary">View</span>
                                 </Link>
                               </td>

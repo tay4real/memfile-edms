@@ -44,7 +44,7 @@ const EditGeneralFile = () => {
         file_title: general_file.file_title,
         mdaShortName: general_file.mdaShortName,
       });
-      setFileID(file._id);
+      setFileID(general_file._id);
     }
   }, [dispatch, general_file]);
 

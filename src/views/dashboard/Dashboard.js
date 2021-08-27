@@ -176,7 +176,7 @@ const Dashboard = () => {
             </div>
 
             <div className="row">
-              <div className="col-lg-6 col-6">
+              <div className="col-12">
                 {" "}
                 <Chart
                   data={incomingMailStats}
@@ -185,7 +185,7 @@ const Dashboard = () => {
                   dataKey="New Incoming Mail"
                 />
               </div>
-              <div className="col-lg-6 col-6">
+              <div className="col-12">
                 <Chart
                   data={outgoingMailStats}
                   title="Outgoing Mail Analytics"
