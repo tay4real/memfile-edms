@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import ContentHeader from "../../components/ContentHeader";
 import { fetchUserByID } from "../../../services/user.service";
+import { fetchGeneralFileById } from "../../../services/generalfiles.service";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -9,6 +10,10 @@ const DeskFiles = () => {
   let { user_profile } = useSelector((state) => state.operations);
 
   let { user } = useSelector((state) => state.auth);
+
+  const getFile = (id) => {
+    dispatch(fetchGeneralFileById(id));
+  };
 
   useEffect(() => {
     if (user) {
@@ -37,11 +42,8 @@ const DeskFiles = () => {
                       <tr>
                         <th>File No</th>
                         <th>File Title</th>
-                        <th>MDA</th>
-                        <th>No of Documents in File</th>
-                        <th>View Documents</th>
-                        <th>Edit File</th>
-                        <th>Delete File</th>
+
+                        <th>View File</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -59,33 +61,14 @@ const DeskFiles = () => {
                                   {file.file_title}
                                 </div>
                               </td>
-                              <td className="whitespace-nowrap">
-                                <div className="text-sm text-gray-500">
-                                  {file.mdaShortName}
-                                </div>
-                              </td>
-                              <td className="whitespace-nowrap">
-                                <div className="text-sm text-gray-500">
-                                  {file.incomingmails.length +
-                                    file.outgoingmails.length}
-                                </div>
-                              </td>
 
                               <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                                <Link to={`/departments/edit/`}>
+                                <Link
+                                  to={`/general-files/detail`}
+                                  onClick={() => getFile(file._id)}
+                                >
                                   <span className="badge bg-primary">View</span>
                                 </Link>
-                              </td>
-
-                              <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                                <Link to={`/general-files/edit`}>
-                                  <span className="badge bg-primary">Edit</span>
-                                </Link>
-                              </td>
-                              <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                                <span className=" badge bg-danger ">
-                                  Delete
-                                </span>
                               </td>
                             </tr>
                           ))

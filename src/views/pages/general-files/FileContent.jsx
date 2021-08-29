@@ -91,8 +91,8 @@ const FileContent = () => {
                 </div>
                 {/* /.row */}
                 {/* Table row */}
-                <div className="row mt-3">
-                  <div className="col-12 table-responsive">
+                <div className="row mt-3 mb-3">
+                  <div className="col-12 table-responsive mb-3">
                     <h5>Incoming Mails</h5>
                     <table className="table table-striped">
                       <thead>
@@ -161,7 +161,7 @@ const FileContent = () => {
                     </table>
                   </div>
 
-                  <div className="col-12 table-responsive">
+                  <div className="col-12 table-responsive mb-3">
                     <h5>Outgoing Mails</h5>
                     <table className="table table-striped">
                       <thead>
@@ -209,7 +209,7 @@ const FileContent = () => {
                               </td>
                               <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
                                 <Link
-                                  to={`/incoming-mails/view`}
+                                  to={`/outgoing-mails/view`}
                                   onClick={() => getOutgoingMails(mail._id)}
                                 >
                                   <span className="badge bg-primary">View</span>
@@ -231,8 +231,8 @@ const FileContent = () => {
                   </div>
                 </div>
                 {/* /.row */}
-                <div className="row">
-                  <div className="col-12">
+                <div className="row mb-3">
+                  <div className="col col-md-6 mb-3">
                     <p className="lead">File Request History</p>
                     <div className="table-responsive">
                       <table className="table">
@@ -287,7 +287,7 @@ const FileContent = () => {
                       </table>
                     </div>
                   </div>
-                  <div className="col-12">
+                  <div className="col col-md-6 mb-3">
                     <p className="lead">File Return History</p>
                     <div className="table-responsive">
                       <table className="table">
@@ -318,7 +318,7 @@ const FileContent = () => {
                                           </td>
                                           <td className="whitespace-nowrap">
                                             <div className="text-sm text-gray-500">
-                                              {file_return.dateRequested &&
+                                              {file_return.dateReturned &&
                                                 new Date(
                                                   file_return.dateReturned
                                                 )
@@ -342,27 +342,171 @@ const FileContent = () => {
                       </table>
                     </div>
                   </div>
-                  <div className="col-12">
+                  <div className="col-12 mb-3">
                     <p className="lead">File Charge History</p>
                     <div className="table-responsive">
                       <table className="table">
+                        <thead>
+                          <tr>
+                            <th>Charge From</th>
+                            <th>Charge To</th>
+                            <th>Date Charged</th>
+                            <th>Document Ref No</th>
+                            <th>Document Type</th>
+                            <th>Document Subject</th>
+                            <th>Charge Comment</th>
+                            <th>View Document</th>
+                          </tr>
+                        </thead>
                         <tbody>
-                          <tr>
-                            <th style={{ width: "50%" }}>Subtotal:</th>
-                            <td>$250.30</td>
-                          </tr>
-                          <tr>
-                            <th>Tax (9.3%)</th>
-                            <td>$10.34</td>
-                          </tr>
-                          <tr>
-                            <th>Shipping:</th>
-                            <td>$5.80</td>
-                          </tr>
-                          <tr>
-                            <th>Total:</th>
-                            <td>$265.24</td>
-                          </tr>
+                          {file.file_return_history !== 0 ? (
+                            file.file_charge_history.map((file_charge) => (
+                              <tr key={file_charge._id}>
+                                <td className="">
+                                  <div className="d-flex align-items-center">
+                                    <div className="">{file_charge.from}</div>
+                                  </div>
+                                </td>
+                                <td className="">
+                                  <div className="d-flex align-items-center">
+                                    <div className="">{file_charge.to}</div>
+                                  </div>
+                                </td>
+                                <td className="whitespace-nowrap">
+                                  <div className="text-sm text-gray-500">
+                                    {file_charge.dateCharged &&
+                                      new Date(file_charge.dateCharged)
+                                        .toISOString()
+                                        .substring(0, 10)}
+                                  </div>
+                                </td>
+                                {file.incoming_mails.length !== 0 &&
+                                  file.incoming_mails
+                                    .filter(
+                                      (mail) => mail._id === file_charge.doc_id
+                                    )
+                                    .map((mail) => {
+                                      return (
+                                        <>
+                                          <td className="">
+                                            <div className="d-flex align-items-center">
+                                              <div className="">
+                                                {mail.ref_no}
+                                              </div>
+                                            </div>
+                                          </td>
+                                          <td className="">
+                                            <div className="d-flex align-items-center">
+                                              <div className="">
+                                                Incoming Mail
+                                              </div>
+                                            </div>
+                                          </td>
+                                          <td className="">
+                                            <div className="d-flex align-items-center">
+                                              <div className="">
+                                                {mail.subject}
+                                              </div>
+                                            </div>
+                                          </td>
+                                          {mail.charge_comment.length !== 0 &&
+                                            mail.charge_comment
+                                              .filter(
+                                                (comment) =>
+                                                  comment.from ===
+                                                    file_charge.from &&
+                                                  comment.to ===
+                                                    file_charge.to &&
+                                                  new Date(comment.dateCharged)
+                                                    .toISOString()
+                                                    .substring(0, 10) ===
+                                                    new Date(
+                                                      file_charge.dateCharged
+                                                    )
+                                                      .toISOString()
+                                                      .substring(0, 10)
+                                              )
+                                              .map((comment) => {
+                                                return (
+                                                  <>
+                                                    <td className="">
+                                                      <div className="d-flex align-items-center">
+                                                        <div className="">
+                                                          {comment.comment}
+                                                        </div>
+                                                      </div>
+                                                    </td>{" "}
+                                                  </>
+                                                );
+                                              })}
+                                          <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
+                                            <Link
+                                              to={`/incoming-mails/view`}
+                                              onClick={() =>
+                                                getIncomingMails(mail._id)
+                                              }
+                                            >
+                                              <span className="badge bg-primary">
+                                                View
+                                              </span>
+                                            </Link>
+                                          </td>
+                                        </>
+                                      );
+                                    })}
+                                {file.outgoing_mails.length !== 0 &&
+                                  file.outgoing_mails
+                                    .filter(
+                                      (mail) => mail._id === file_charge.doc_id
+                                    )
+                                    .map((mail) => {
+                                      return (
+                                        <>
+                                          <td className="">
+                                            <div className="d-flex align-items-center">
+                                              <div className="">
+                                                {mail.ref_no}
+                                              </div>
+                                            </div>
+                                          </td>
+                                          <td className="">
+                                            <div className="d-flex align-items-center">
+                                              <div className="">
+                                                Outgoing Mail
+                                              </div>
+                                            </div>
+                                          </td>
+                                          <td className="">
+                                            <div className="d-flex align-items-center">
+                                              <div className="">
+                                                {mail.subject}
+                                              </div>
+                                            </div>
+                                          </td>
+                                          <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
+                                            <Link
+                                              to={`/outgoing-mails/view`}
+                                              onClick={() =>
+                                                getOutgoingMails(mail._id)
+                                              }
+                                            >
+                                              <span className="badge bg-primary">
+                                                View
+                                              </span>
+                                            </Link>
+                                          </td>
+                                        </>
+                                      );
+                                    })}
+                              </tr>
+                            ))
+                          ) : (
+                            <tr>
+                              <td colSpan="9">
+                                <div className="p-1 text-center">Nil</div>
+                              </td>
+                            </tr>
+                          )}
                         </tbody>
                       </table>
                     </div>
@@ -370,18 +514,6 @@ const FileContent = () => {
                   {/* /.col */}
                 </div>
                 {/* /.row */}
-                {/* this row will not appear when printing */}
-                <div className="row no-print">
-                  <div className="col-12">
-                    <button
-                      type="button"
-                      className="btn btn-primary float-right"
-                      style={{ marginRight: 5 }}
-                    >
-                      <i className="fas fa-download" /> Generate PDF
-                    </button>
-                  </div>
-                </div>
               </div>
               {/* /.invoice */}
             </div>

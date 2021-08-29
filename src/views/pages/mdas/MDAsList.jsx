@@ -14,6 +14,11 @@ const MDAsList = () => {
   const dispatch = useDispatch();
   let { mdas } = useSelector((state) => state.operations);
 
+  //initialize datatable
+  $(document).ready(function () {
+    $("#example1").DataTable();
+  });
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const [del, setDel] = useState({
@@ -50,17 +55,10 @@ const MDAsList = () => {
 
   const getMDAs = async () => {
     await dispatch(fetchAllMDAs());
-    //initialize datatable
-    $(document).ready(function () {
-      $("#example1").DataTable();
-    });
   };
 
   useEffect(() => {
     dispatch(fetchAllMDAs());
-    $(document).ready(function () {
-      $("#example1").DataTable();
-    });
   }, [dispatch]);
 
   return (

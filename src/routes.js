@@ -110,12 +110,12 @@ const routes = [
   {
     path: "/files",
     exact: true,
-    name: "Files",
+    name: "Desk Files",
     component: DeskFiles,
   },
   {
     path: "/files/desk-files",
-    name: "Files at Desk",
+    name: "Desk Files",
     component: DeskFiles,
   },
   {
