@@ -90,6 +90,7 @@ const UsersList = () => {
               <div className="card">
                 {/* /.card-header */}
                 <div className="card-body">
+                <div className="table-responsive">
                   <table
                     id="example1"
                     className="table table-bordered table-striped"
@@ -118,6 +119,7 @@ const UsersList = () => {
                                     src={user.avatar}
                                     className="img-circle elevation-2"
                                     alt="User"
+                                    width="40"
                                   />
                                 </div>
                               </div>
@@ -209,6 +211,7 @@ const UsersList = () => {
                         ))}
                     </tbody>
                   </table>
+                  </div>
                 </div>
                 {/* /.card-body */}
               </div>
