@@ -557,7 +557,7 @@ const FileOperations = () => {
                                                         )}
                                                         className="badge bg-primary p-2 mt-2"
                                                       >
-                                                        View Page {key + 1}
+                                                        Page {key + 1}
                                                       </div>
                                                     </div>
                                                   </>
