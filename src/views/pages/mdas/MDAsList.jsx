@@ -74,52 +74,54 @@ const MDAsList = () => {
               <div className="card">
                 {/* /.card-header */}
                 <div className="card-body">
-                  <table
-                    id="example1"
-                    className="table table-bordered table-striped"
-                  >
-                    <thead>
-                      <tr>
-                        <th> MDA Name</th>
-                        <th>MDA Shortname</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {mdas !== null &&
-                        mdas.map((mda) => (
-                          <tr key={mda._id}>
-                            <td className="">
-                              <div className="d-flex align-items-center">
-                                <div className="">{mda.name}</div>
-                              </div>
-                            </td>
-                            <td className="whitespace-nowrap">
-                              <div className="text-sm text-gray-500">
-                                {mda.shortName}
-                              </div>
-                            </td>
+                  <div className="table-responsive">
+                    <table
+                      id="example1"
+                      className="table table-bordered table-striped"
+                    >
+                      <thead>
+                        <tr>
+                          <th> MDA Name</th>
+                          <th>MDA Shortname</th>
+                          <th>Edit</th>
+                          <th>Delete</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {mdas !== null &&
+                          mdas.map((mda) => (
+                            <tr key={mda._id}>
+                              <td className="">
+                                <div className="d-flex align-items-center">
+                                  <div className="">{mda.name}</div>
+                                </div>
+                              </td>
+                              <td className="whitespace-nowrap">
+                                <div className="text-sm text-gray-500">
+                                  {mda.shortName}
+                                </div>
+                              </td>
 
-                            <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                              <Link to={`/mdas/edit/${mda._id}`}>
-                                <span className="badge bg-primary">Edit</span>
-                              </Link>
-                            </td>
-                            <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                              <span
-                                onClick={() =>
-                                  handleShowDeleteModal(mda._id, mda.name)
-                                }
-                                className=" badge bg-danger "
-                              >
-                                Delete
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
+                              <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
+                                <Link to={`/mdas/edit/${mda._id}`}>
+                                  <span className="badge bg-primary">Edit</span>
+                                </Link>
+                              </td>
+                              <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
+                                <span
+                                  onClick={() =>
+                                    handleShowDeleteModal(mda._id, mda.name)
+                                  }
+                                  className=" badge bg-danger "
+                                >
+                                  Delete
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
                 {/* /.card-body */}
               </div>
