@@ -74,123 +74,129 @@ const IncomingMailsList = () => {
               <div className="card">
                 {/* /.card-header */}
                 <div className="card-body">
-                  <table
-                    id="example"
-                    className="table table-bordered table-striped"
-                  >
-                    <thead>
-                      <tr>
-                        <th>Ref No.</th>
-                        <th>Subject</th>
-                        <th>Sender</th>
-                        <th>Recipient</th>
-                        <th>Preview</th>
-                        <th>Date Received</th>
-                        <th>View</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {incoming_mails !== null ? (
-                        incoming_mails.length !== 0 ? (
-                          incoming_mails.map((mail) => (
-                            <tr key={mail._id}>
-                              <td className="">
-                                <div className="d-flex align-items-center">
-                                  <div className=""> {mail.ref_no}</div>
-                                </div>
-                              </td>
-                              <td className="whitespace-nowrap">
-                                <div className="text-sm text-gray-500">
-                                  {mail.subject}
-                                </div>
-                              </td>
-                              <td className="whitespace-nowrap">
-                                <div className="text-sm text-gray-500">
-                                  {mail.sender}
-                                </div>
-                              </td>
-                              <td className="whitespace-nowrap">
-                                <div className="text-sm text-gray-500">
-                                  {mail.recipient}
-                                </div>
-                              </td>
-                              <td className="whitespace-nowrap">
-                                <div className="text-sm text-gray-500">
-                                  {mail.upload_url &&
-                                    mail.upload_url.map((url, idx) => {
-                                      return (
-                                        <img
-                                          key={idx}
-                                          src={url}
-                                          width="30"
-                                          alt="preview"
-                                        />
-                                      );
-                                    })}
-                                </div>
-                              </td>
-                              <td className="whitespace-nowrap">
-                                <div className="text-sm text-gray-500">
-                                  {mail.date_received &&
-                                    new Date(mail.date_received)
-                                      .toISOString()
-                                      .substring(0, 10)}
-                                </div>
-                              </td>
-                              <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                                <Link
-                                  to={`/incoming-mails/view`}
-                                  onClick={() => getIncomingMails(mail._id)}
-                                >
-                                  <span className="badge bg-primary">View</span>
-                                </Link>
-                              </td>
+                  <div className="table-responsive">
+                    <table
+                      id="example"
+                      className="table table-bordered table-striped"
+                    >
+                      <thead>
+                        <tr>
+                          <th>Ref No.</th>
+                          <th>Subject</th>
+                          <th>Sender</th>
+                          <th>Recipient</th>
+                          <th>Preview</th>
+                          <th>Date Received</th>
+                          <th>View</th>
+                          <th>Edit</th>
+                          <th>Delete</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {incoming_mails !== null ? (
+                          incoming_mails.length !== 0 ? (
+                            incoming_mails.map((mail) => (
+                              <tr key={mail._id}>
+                                <td className="">
+                                  <div className="d-flex align-items-center">
+                                    <div className=""> {mail.ref_no}</div>
+                                  </div>
+                                </td>
+                                <td className="whitespace-nowrap">
+                                  <div className="text-sm text-gray-500">
+                                    {mail.subject}
+                                  </div>
+                                </td>
+                                <td className="whitespace-nowrap">
+                                  <div className="text-sm text-gray-500">
+                                    {mail.sender}
+                                  </div>
+                                </td>
+                                <td className="whitespace-nowrap">
+                                  <div className="text-sm text-gray-500">
+                                    {mail.recipient}
+                                  </div>
+                                </td>
+                                <td className="whitespace-nowrap">
+                                  <div className="text-sm text-gray-500">
+                                    {mail.upload_url &&
+                                      mail.upload_url.map((url, idx) => {
+                                        return (
+                                          <img
+                                            key={idx}
+                                            src={url}
+                                            width="30"
+                                            alt="preview"
+                                          />
+                                        );
+                                      })}
+                                  </div>
+                                </td>
+                                <td className="whitespace-nowrap">
+                                  <div className="text-sm text-gray-500">
+                                    {mail.date_received &&
+                                      new Date(mail.date_received)
+                                        .toISOString()
+                                        .substring(0, 10)}
+                                  </div>
+                                </td>
+                                <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
+                                  <Link
+                                    to={`/incoming-mails/view`}
+                                    onClick={() => getIncomingMails(mail._id)}
+                                  >
+                                    <span className="badge bg-primary">
+                                      View
+                                    </span>
+                                  </Link>
+                                </td>
 
-                              <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                                <Link
-                                  to={`/incoming-mails/edit`}
-                                  onClick={() => getIncomingMails(mail._id)}
-                                >
-                                  <span className="badge bg-primary">Edit</span>
-                                </Link>
-                              </td>
-                              <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                                <span
-                                  className=" badge bg-danger "
-                                  onClick={() =>
-                                    handleShowDeleteModal(
-                                      mail._id,
-                                      mail.subject
-                                    )
-                                  }
-                                >
-                                  Delete
-                                </span>
+                                <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
+                                  <Link
+                                    to={`/incoming-mails/edit`}
+                                    onClick={() => getIncomingMails(mail._id)}
+                                  >
+                                    <span className="badge bg-primary">
+                                      Edit
+                                    </span>
+                                  </Link>
+                                </td>
+                                <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
+                                  <span
+                                    className=" badge bg-danger "
+                                    onClick={() =>
+                                      handleShowDeleteModal(
+                                        mail._id,
+                                        mail.subject
+                                      )
+                                    }
+                                  >
+                                    Delete
+                                  </span>
+                                </td>
+                              </tr>
+                            ))
+                          ) : (
+                            <tr>
+                              <td colSpan="9">
+                                <div className="p-1 text-center">
+                                  No Files Added
+                                </div>
                               </td>
                             </tr>
-                          ))
+                          )
                         ) : (
                           <tr>
                             <td colSpan="9">
                               <div className="p-1 text-center">
-                                No Files Added
+                                Please wait...
                               </div>
                             </td>
                           </tr>
-                        )
-                      ) : (
-                        <tr>
-                          <td colSpan="9">
-                            <div className="p-1 text-center">
-                              Please wait...
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
                 {/* /.card-body */}
               </div>

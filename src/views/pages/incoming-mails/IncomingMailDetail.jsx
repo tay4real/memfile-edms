@@ -134,54 +134,56 @@ const IncomingMailDetail = () => {
               <div className="row my-2">
                 <div className="col">
                   <strong>Previous Charge Comments: </strong>
-                  <table className="table table-bordered table-striped mt-2">
-                    <thead>
-                      <tr>
-                        <th>From</th>
-                        <th>To</th>
-                        <th>Comment</th>
-                        <th>Date Charged</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {incoming_mail.charge_comment.length !== 0 ? (
-                        incoming_mail.charge_comment.map((comment) => (
-                          <tr key={comment._id}>
-                            <td className="whitespace-nowrap">
-                              <div className="text-sm text-gray-500">
-                                {comment.from}
-                              </div>
-                            </td>
-                            <td className="whitespace-nowrap">
-                              <div className="text-sm text-gray-500">
-                                {comment.to}
-                              </div>
-                            </td>
-                            <td className="whitespace-nowrap">
-                              <div className="text-sm text-gray-500">
-                                {comment.comment}
-                              </div>
-                            </td>
+                  <div className="table-responsive">
+                    <table className="table table-bordered table-striped mt-2">
+                      <thead>
+                        <tr>
+                          <th>From</th>
+                          <th>To</th>
+                          <th>Comment</th>
+                          <th>Date Charged</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {incoming_mail.charge_comment.length !== 0 ? (
+                          incoming_mail.charge_comment.map((comment) => (
+                            <tr key={comment._id}>
+                              <td className="whitespace-nowrap">
+                                <div className="text-sm text-gray-500">
+                                  {comment.from}
+                                </div>
+                              </td>
+                              <td className="whitespace-nowrap">
+                                <div className="text-sm text-gray-500">
+                                  {comment.to}
+                                </div>
+                              </td>
+                              <td className="whitespace-nowrap">
+                                <div className="text-sm text-gray-500">
+                                  {comment.comment}
+                                </div>
+                              </td>
 
-                            <td className="whitespace-nowrap">
-                              <div className="text-sm text-gray-500">
-                                {comment.dateCharged &&
-                                  new Date(comment.dateCharged)
-                                    .toISOString()
-                                    .substring(0, 10)}
-                              </div>
+                              <td className="whitespace-nowrap">
+                                <div className="text-sm text-gray-500">
+                                  {comment.dateCharged &&
+                                    new Date(comment.dateCharged)
+                                      .toISOString()
+                                      .substring(0, 10)}
+                                </div>
+                              </td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan="9">
+                              <div className="p-1 text-center">No Comments</div>
                             </td>
                           </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan="9">
-                            <div className="p-1 text-center">No Comments</div>
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </>

@@ -24,9 +24,8 @@ import {
 const FileOperations = () => {
   const dispatch = useDispatch();
   let { user } = useSelector((state) => state.auth);
-  let { general_files, user_profile, users, general_file, incoming_mail } = useSelector(
-    (state) => state.operations
-  );
+  let { general_files, user_profile, users, general_file, incoming_mail } =
+    useSelector((state) => state.operations);
   let { message, err_message } = useSelector((state) => state.messages);
 
   const [operation, setOperation] = useState("");
@@ -209,7 +208,7 @@ const FileOperations = () => {
           <div className="card card-default">
             <div className="card-body">
               <div className="row">
-                <div className="col col-md-3  py-2 ">
+                <div className="col-12 col-md-3  py-2 ">
                   {" "}
                   <label>Operations</label>
                   <select
@@ -230,7 +229,7 @@ const FileOperations = () => {
                   </select>
                 </div>
 
-                <div className="col col-md-9">
+                <div className="col-12 col-md-9">
                   {operation === "" && (
                     <div
                       className="border rounded py-2 px-2 d-flex flex-column  justify-content-center align-items-center"
@@ -501,7 +500,8 @@ const FileOperations = () => {
                                     </div>
                                     <div className="row my-2">
                                       <div className="col">
-                                        <strong>Sender: </strong> {incoming_mail.sender}
+                                        <strong>Sender: </strong>{" "}
+                                        {incoming_mail.sender}
                                       </div>
                                     </div>
                                     <div className="row my-2">
@@ -515,7 +515,8 @@ const FileOperations = () => {
                                           data-ride="carousel"
                                         >
                                           <ol className="carousel-indicators">
-                                            {incoming_mail.upload_url.length !== 0 &&
+                                            {incoming_mail.upload_url.length !==
+                                              0 &&
                                               incoming_mail.upload_url.map(
                                                 (url, key) => (
                                                   <>
@@ -534,7 +535,8 @@ const FileOperations = () => {
                                           </ol>
 
                                           <div className="carousel-inner">
-                                            {incoming_mail.upload_url.length !== 0 ? (
+                                            {incoming_mail.upload_url.length !==
+                                            0 ? (
                                               incoming_mail.upload_url.map(
                                                 (url, key) => (
                                                   <>
@@ -605,61 +607,63 @@ const FileOperations = () => {
                                         <strong>
                                           Previous Charge Comments:{" "}
                                         </strong>
-                                        <table className="table table-bordered table-striped mt-2">
-                                          <thead>
-                                            <tr>
-                                              <th>From</th>
-                                              <th>To</th>
-                                              <th>Comment</th>
-                                              <th>Date Charged</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            {incoming_mail.charge_comment.length !==
-                                            0 ? (
-                                              incoming_mail.charge_comment.map(
-                                                (comment) => (
-                                                  <tr key={comment._id}>
-                                                    <td className="whitespace-nowrap">
-                                                      <div className="text-sm text-gray-500">
-                                                        {comment.from}
-                                                      </div>
-                                                    </td>
-                                                    <td className="whitespace-nowrap">
-                                                      <div className="text-sm text-gray-500">
-                                                        {comment.to}
-                                                      </div>
-                                                    </td>
-                                                    <td className="whitespace-nowrap">
-                                                      <div className="text-sm text-gray-500">
-                                                        {comment.comment}
-                                                      </div>
-                                                    </td>
-
-                                                    <td className="whitespace-nowrap">
-                                                      <div className="text-sm text-gray-500">
-                                                        {comment.dateCharged &&
-                                                          new Date(
-                                                            comment.dateCharged
-                                                          )
-                                                            .toISOString()
-                                                            .substring(0, 10)}
-                                                      </div>
-                                                    </td>
-                                                  </tr>
-                                                )
-                                              )
-                                            ) : (
+                                        <div className="table-responsive">
+                                          <table className="table table-bordered table-striped mt-2">
+                                            <thead>
                                               <tr>
-                                                <td colSpan="9">
-                                                  <div className="p-1 text-center">
-                                                    No Comments
-                                                  </div>
-                                                </td>
+                                                <th>From</th>
+                                                <th>To</th>
+                                                <th>Comment</th>
+                                                <th>Date Charged</th>
                                               </tr>
-                                            )}
-                                          </tbody>
-                                        </table>
+                                            </thead>
+                                            <tbody>
+                                              {incoming_mail.charge_comment
+                                                .length !== 0 ? (
+                                                incoming_mail.charge_comment.map(
+                                                  (comment) => (
+                                                    <tr key={comment._id}>
+                                                      <td className="whitespace-nowrap">
+                                                        <div className="text-sm text-gray-500">
+                                                          {comment.from}
+                                                        </div>
+                                                      </td>
+                                                      <td className="whitespace-nowrap">
+                                                        <div className="text-sm text-gray-500">
+                                                          {comment.to}
+                                                        </div>
+                                                      </td>
+                                                      <td className="whitespace-nowrap">
+                                                        <div className="text-sm text-gray-500">
+                                                          {comment.comment}
+                                                        </div>
+                                                      </td>
+
+                                                      <td className="whitespace-nowrap">
+                                                        <div className="text-sm text-gray-500">
+                                                          {comment.dateCharged &&
+                                                            new Date(
+                                                              comment.dateCharged
+                                                            )
+                                                              .toISOString()
+                                                              .substring(0, 10)}
+                                                        </div>
+                                                      </td>
+                                                    </tr>
+                                                  )
+                                                )
+                                              ) : (
+                                                <tr>
+                                                  <td colSpan="9">
+                                                    <div className="p-1 text-center">
+                                                      No Comments
+                                                    </div>
+                                                  </td>
+                                                </tr>
+                                              )}
+                                            </tbody>
+                                          </table>
+                                        </div>
                                       </div>
                                     </div>
                                   </>

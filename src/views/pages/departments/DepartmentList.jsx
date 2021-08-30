@@ -107,77 +107,81 @@ const DepartmentsList = () => {
                 </div>
                 {/* /.card-header */}
                 <div className="card-body">
-                  <table
-                    id="example1"
-                    className="table table-bordered table-striped"
-                  >
-                    <thead>
-                      <tr>
-                        <th>Department Name</th>
-                        <th>Department Shortname</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {mdaID !== "" && depts !== null ? (
-                        depts.length !== 0 ? (
-                          depts.map((dept) => (
-                            <tr key={dept._id}>
-                              <td className="">
-                                <div className="d-flex align-items-center">
-                                  <div className=""> {dept.deptName}</div>
-                                </div>
-                              </td>
-                              <td className="whitespace-nowrap">
-                                <div className="text-sm text-gray-500">
-                                  {dept.deptShortName}
-                                </div>
-                              </td>
+                  <div className="table-responsive">
+                    <table
+                      id="example1"
+                      className="table table-bordered table-striped"
+                    >
+                      <thead>
+                        <tr>
+                          <th>Department Name</th>
+                          <th>Department Shortname</th>
+                          <th>Edit</th>
+                          <th>Delete</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {mdaID !== "" && depts !== null ? (
+                          depts.length !== 0 ? (
+                            depts.map((dept) => (
+                              <tr key={dept._id}>
+                                <td className="">
+                                  <div className="d-flex align-items-center">
+                                    <div className=""> {dept.deptName}</div>
+                                  </div>
+                                </td>
+                                <td className="whitespace-nowrap">
+                                  <div className="text-sm text-gray-500">
+                                    {dept.deptShortName}
+                                  </div>
+                                </td>
 
-                              <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                                <Link
-                                  to={`/departments/edit/${mdaID}`}
-                                  onClick={() => getDept(mdaID, dept._id)}
-                                >
-                                  <span className="badge bg-primary">Edit</span>
-                                </Link>
-                              </td>
-                              <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                                <span
-                                  onClick={() =>
-                                    handleShowDeleteModal(
-                                      dept._id,
-                                      dept.deptName
-                                    )
-                                  }
-                                  className=" badge bg-danger "
-                                >
-                                  Delete
-                                </span>
+                                <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
+                                  <Link
+                                    to={`/departments/edit/${mdaID}`}
+                                    onClick={() => getDept(mdaID, dept._id)}
+                                  >
+                                    <span className="badge bg-primary">
+                                      Edit
+                                    </span>
+                                  </Link>
+                                </td>
+                                <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
+                                  <span
+                                    onClick={() =>
+                                      handleShowDeleteModal(
+                                        dept._id,
+                                        dept.deptName
+                                      )
+                                    }
+                                    className=" badge bg-danger "
+                                  >
+                                    Delete
+                                  </span>
+                                </td>
+                              </tr>
+                            ))
+                          ) : (
+                            <tr>
+                              <td colSpan="4">
+                                <div className="p-1 text-center">
+                                  No Department Added
+                                </div>
                               </td>
                             </tr>
-                          ))
+                          )
                         ) : (
                           <tr>
                             <td colSpan="4">
                               <div className="p-1 text-center">
-                                No Department Added
+                                Choose an MDA to view Departments
                               </div>
                             </td>
                           </tr>
-                        )
-                      ) : (
-                        <tr>
-                          <td colSpan="4">
-                            <div className="p-1 text-center">
-                              Choose an MDA to view Departments
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
                 {/* /.card-body */}
               </div>

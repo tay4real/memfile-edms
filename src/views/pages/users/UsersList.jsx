@@ -90,127 +90,127 @@ const UsersList = () => {
               <div className="card">
                 {/* /.card-header */}
                 <div className="card-body">
-                <div className="table-responsive">
-                  <table
-                    id="example1"
-                    className="table table-bordered table-striped"
-                  >
-                    <thead>
-                      <tr>
-                        <th>Profile</th>
-                        <th>Name</th>
-                        <th>Department</th>
-                        <th>Post</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                        <th>Change Status</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {users !== null &&
-                        users.map((user) => (
-                          <tr key={user._id}>
-                            <td className="">
-                              <div className="d-flex align-items-center">
-                                <div className="image">
-                                  <img
-                                    src={user.avatar}
-                                    className="img-circle elevation-2"
-                                    alt="User"
-                                    width="40"
-                                  />
+                  <div className="table-responsive">
+                    <table
+                      id="example1"
+                      className="table table-bordered table-striped"
+                    >
+                      <thead>
+                        <tr>
+                          <th>Profile</th>
+                          <th>Name</th>
+                          <th>Department</th>
+                          <th>Post</th>
+                          <th>Role</th>
+                          <th>Status</th>
+                          <th>Change Status</th>
+                          <th>Edit</th>
+                          <th>Delete</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {users !== null &&
+                          users.map((user) => (
+                            <tr key={user._id}>
+                              <td className="">
+                                <div className="d-flex align-items-center">
+                                  <div className="image">
+                                    <img
+                                      src={user.avatar}
+                                      className="img-circle elevation-2"
+                                      alt="User"
+                                      width="40"
+                                    />
+                                  </div>
                                 </div>
-                              </div>
-                            </td>
-                            <td className="">
-                              <div className="d-flex align-items-center">
-                                <div className="">
-                                  {user.surname} {user.firstname}
+                              </td>
+                              <td className="">
+                                <div className="d-flex align-items-center">
+                                  <div className="">
+                                    {user.surname} {user.firstname}
+                                  </div>
                                 </div>
-                              </div>
-                            </td>
-                            <td className="whitespace-nowrap">
-                              <div className="text-sm text-gray-500">
-                                {user.department}
-                              </div>
-                            </td>
-                            <td className="whitespace-nowrap">
-                              <div className="text-sm text-gray-500">
-                                {user.post}
-                              </div>
-                            </td>
-                            <td className="whitespace-nowrap">
-                              <div className="text-sm text-gray-500">
-                                {user.role}
-                              </div>
-                            </td>
-                            <td className="whitespace-nowrap">
-                              <div className="text-sm text-gray-500">
-                                {user.status === 0 ? (
-                                  <span className="badge bg-success">
-                                    Active
-                                  </span>
-                                ) : (
-                                  <span className="badge bg-warning">
-                                    Inactive
-                                  </span>
-                                )}
-                              </div>
-                            </td>
-                            <td className="whitespace-nowrap">
-                              <div className="text-sm text-gray-500">
-                                {user.status === 0 ? (
-                                  <span
-                                    className="badge bg-warning"
-                                    onClick={() =>
-                                      deactivateUser(
-                                        user._id,
-                                        user.surname + " " + user.firstname
-                                      )
-                                    }
-                                  >
-                                    Deactivate
-                                  </span>
-                                ) : (
-                                  <span
-                                    className="badge bg-success"
-                                    onClick={() =>
-                                      activateUser(
-                                        user._id,
-                                        user.surname + " " + user.firstname
-                                      )
-                                    }
-                                  >
-                                    Activate
-                                  </span>
-                                )}
-                              </div>
-                            </td>
+                              </td>
+                              <td className="whitespace-nowrap">
+                                <div className="text-sm text-gray-500">
+                                  {user.department}
+                                </div>
+                              </td>
+                              <td className="whitespace-nowrap">
+                                <div className="text-sm text-gray-500">
+                                  {user.post}
+                                </div>
+                              </td>
+                              <td className="whitespace-nowrap">
+                                <div className="text-sm text-gray-500">
+                                  {user.role}
+                                </div>
+                              </td>
+                              <td className="whitespace-nowrap">
+                                <div className="text-sm text-gray-500">
+                                  {user.status === 0 ? (
+                                    <span className="badge bg-success">
+                                      Active
+                                    </span>
+                                  ) : (
+                                    <span className="badge bg-warning">
+                                      Inactive
+                                    </span>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="whitespace-nowrap">
+                                <div className="text-sm text-gray-500">
+                                  {user.status === 0 ? (
+                                    <span
+                                      className="badge bg-warning"
+                                      onClick={() =>
+                                        deactivateUser(
+                                          user._id,
+                                          user.surname + " " + user.firstname
+                                        )
+                                      }
+                                    >
+                                      Deactivate
+                                    </span>
+                                  ) : (
+                                    <span
+                                      className="badge bg-success"
+                                      onClick={() =>
+                                        activateUser(
+                                          user._id,
+                                          user.surname + " " + user.firstname
+                                        )
+                                      }
+                                    >
+                                      Activate
+                                    </span>
+                                  )}
+                                </div>
+                              </td>
 
-                            <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                              <Link to={`/users/edit/${user._id}`}>
-                                <span className="badge bg-primary">Edit</span>
-                              </Link>
-                            </td>
-                            <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                              <span
-                                onClick={() =>
-                                  handleShowDeleteModal(
-                                    user._id,
-                                    user.surname + " " + user.firstname
-                                  )
-                                }
-                                className=" badge bg-danger "
-                              >
-                                Delete
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
+                              <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
+                                <Link to={`/users/edit/${user._id}`}>
+                                  <span className="badge bg-primary">Edit</span>
+                                </Link>
+                              </td>
+                              <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
+                                <span
+                                  onClick={() =>
+                                    handleShowDeleteModal(
+                                      user._id,
+                                      user.surname + " " + user.firstname
+                                    )
+                                  }
+                                  className=" badge bg-danger "
+                                >
+                                  Delete
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
                 {/* /.card-body */}

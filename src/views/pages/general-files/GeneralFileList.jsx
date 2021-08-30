@@ -71,105 +71,113 @@ const GeneralFileList = () => {
               <div className="card">
                 {/* /.card-header */}
                 <div className="card-body">
-                  <table
-                    id="example1"
-                    className="table table-bordered table-striped"
-                  >
-                    <thead>
-                      <tr>
-                        <th>File No</th>
-                        <th>File Title</th>
-                        <th>MDA</th>
-                        <th>No of Documents in File</th>
-                        <th>View Documents</th>
-                        <th>Edit File</th>
-                        <th>Delete File</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {general_files !== null ? (
-                        general_files.length !== 0 ? (
-                          general_files.map((file) => (
-                            <tr key={file._id}>
-                              <td className="">
-                                <div className="d-flex align-items-center">
-                                  <div className=""> {file.file_no}</div>
-                                </div>
-                              </td>
-                              <td className="whitespace-nowrap">
-                                <div className="text-sm text-gray-500">
-                                  {file.file_title}
-                                </div>
-                              </td>
-                              <td className="whitespace-nowrap">
-                                <div className="text-sm text-gray-500">
-                                  {file.mdaShortName}
-                                </div>
-                              </td>
-                              <td className="whitespace-nowrap">
-                                <div className="text-sm text-gray-500">
-                                  <span>
-                                    Incoming Mails: {file.incomingmails.length}
-                                  </span>
-                                  <br />
-                                  <span>
-                                    Outgoing Mails: {file.outgoingmails.length}
-                                  </span>
-                                </div>
-                              </td>
+                  <div className="table-responsive">
+                    <table
+                      id="example1"
+                      className="table table-bordered table-striped"
+                    >
+                      <thead>
+                        <tr>
+                          <th>File No</th>
+                          <th>File Title</th>
+                          <th>MDA</th>
+                          <th>No of Documents in File</th>
+                          <th>View Documents</th>
+                          <th>Edit File</th>
+                          <th>Delete File</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {general_files !== null ? (
+                          general_files.length !== 0 ? (
+                            general_files.map((file) => (
+                              <tr key={file._id}>
+                                <td className="">
+                                  <div className="d-flex align-items-center">
+                                    <div className=""> {file.file_no}</div>
+                                  </div>
+                                </td>
+                                <td className="whitespace-nowrap">
+                                  <div className="text-sm text-gray-500">
+                                    {file.file_title}
+                                  </div>
+                                </td>
+                                <td className="whitespace-nowrap">
+                                  <div className="text-sm text-gray-500">
+                                    {file.mdaShortName}
+                                  </div>
+                                </td>
+                                <td className="whitespace-nowrap">
+                                  <div className="text-sm text-gray-500">
+                                    <span>
+                                      Incoming Mails:{" "}
+                                      {file.incomingmails.length}
+                                    </span>
+                                    <br />
+                                    <span>
+                                      Outgoing Mails:{" "}
+                                      {file.outgoingmails.length}
+                                    </span>
+                                  </div>
+                                </td>
 
-                              <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                                <Link
-                                  to={`/general-files/detail`}
-                                  onClick={() => getFile(file._id)}
-                                >
-                                  <span className="badge bg-primary">View</span>
-                                </Link>
-                              </td>
+                                <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
+                                  <Link
+                                    to={`/general-files/detail`}
+                                    onClick={() => getFile(file._id)}
+                                  >
+                                    <span className="badge bg-primary">
+                                      View
+                                    </span>
+                                  </Link>
+                                </td>
 
-                              <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                                <Link
-                                  to={`/general-files/edit`}
-                                  onClick={() => getFile(file._id)}
-                                >
-                                  <span className="badge bg-primary">Edit</span>
-                                </Link>
-                              </td>
-                              <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
-                                <span
-                                  className=" badge bg-danger "
-                                  onClick={() =>
-                                    handleShowDeleteModal(
-                                      file._id,
-                                      file.file_title
-                                    )
-                                  }
-                                >
-                                  Delete
-                                </span>
+                                <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
+                                  <Link
+                                    to={`/general-files/edit`}
+                                    onClick={() => getFile(file._id)}
+                                  >
+                                    <span className="badge bg-primary">
+                                      Edit
+                                    </span>
+                                  </Link>
+                                </td>
+                                <td className="whitespace-nowrap text-right text-sm font-medium cursor-pointer">
+                                  <span
+                                    className=" badge bg-danger "
+                                    onClick={() =>
+                                      handleShowDeleteModal(
+                                        file._id,
+                                        file.file_title
+                                      )
+                                    }
+                                  >
+                                    Delete
+                                  </span>
+                                </td>
+                              </tr>
+                            ))
+                          ) : (
+                            <tr>
+                              <td colSpan="7">
+                                <div className="p-1 text-center">
+                                  No Files Added
+                                </div>
                               </td>
                             </tr>
-                          ))
+                          )
                         ) : (
                           <tr>
                             <td colSpan="7">
                               <div className="p-1 text-center">
-                                No Files Added
+                                Please wait...
                               </div>
                             </td>
                           </tr>
-                        )
-                      ) : (
-                        <tr>
-                          <td colSpan="7">
-                            <div className="p-1 text-center">
-                              Please wait...
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
                 {/* /.card-body */}
               </div>
