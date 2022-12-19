@@ -55,10 +55,8 @@ const NewUser = () => {
 
   const roles = [
     "Admin",
-    "Chairman",
-    "Permanent Secretary",
-    "Director",
     "Registry Officer",
+    "User"
   ];
 
   const onChangeHandler = (e) => {
